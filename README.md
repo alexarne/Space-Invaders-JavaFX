@@ -21,6 +21,6 @@ The application has been developed using the JavaFX SDK. The IDE we used was Int
 
 5. Create a library by going into `File` -> `Project Structure` -> `Libraries` and clicking the plus sign. Select the lib folder which is in the JavaFX SDK folder that you just downloaded and click apply.
 
-6. Lastly, go into `Run` -> `Edit Configurations...` and add the following line as VM options: `--module-path "\path\to\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml`. The value for `--module-path` (`\path\to\javafx-sdk-15.0.1\lib`) should be changed to the path to the exact same lib folder that you previously downloaded.
+6. Lastly, go into `Run` -> `Edit Configurations...` and add the following line as VM options: `--module-path "\path\to\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml`. You might have to click the dropdown "Modify options" and enable "VM Options" in order for said setting to appear. The value for `--module-path` (`\path\to\javafx-sdk-15.0.1\lib`) should be changed to the path to the exact same lib folder that you previously downloaded.
 
 7. Now you should be able to run the program from within IntelliJ.
