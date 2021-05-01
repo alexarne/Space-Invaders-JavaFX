@@ -1,7 +1,9 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -27,7 +29,6 @@ public class Main extends Application {
         window.setTitle("Space Invaders");
 
         mainMenu();
-        game();
 
         window.setWidth(600);
         window.setHeight(900);
@@ -57,7 +58,10 @@ public class Main extends Application {
 
         startGame.setOnMouseEntered(mouseEvent -> startGame.setFill(Color.GREY));
         startGame.setOnMouseExited(mouseEvent -> startGame.setFill(Color.BLACK));
-        startGame.setOnMouseReleased(mouseEvent -> window.setScene(gameScene));
+        startGame.setOnMouseReleased(mouseEvent -> {
+            game();
+            window.setScene(gameScene);
+        });
 
         root.getChildren().add(menuText);
         root.getChildren().add(startGame);
