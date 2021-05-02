@@ -68,49 +68,33 @@ public class Main extends Application {
         menuText.setX((window.getWidth()-16) / 2 - menuText.getLayoutBounds().getWidth() / 2);
         menuText.setY(100);
 
-        Text startGame = new Text();
-        startGame.setText("Start Game");
-        startGame.setFill(Color.BLACK);
-        startGame.setFont(Font.font("Sitka Small", 20));
-        startGame.setX((window.getWidth()-16) / 2 - startGame.getLayoutBounds().getWidth() / 2);
-        startGame.setY(150);
-
-        Text inventory = new Text();
-        inventory.setText("Inventory");
-        inventory.setFill(Color.BLACK);
-        inventory.setFont(Font.font("Sitka Small", 20));
-        inventory.setX((window.getWidth()-16) / 2 - inventory.getLayoutBounds().getWidth() / 2);
-        inventory.setY(190);
-
-        Text achievements = new Text();
-        achievements.setText("Achievements");
-        achievements.setFill(Color.BLACK);
-        achievements.setFont(Font.font("Sitka Small", 20));
-        achievements.setX((window.getWidth()-16) / 2 - achievements.getLayoutBounds().getWidth() / 2);
-        achievements.setY(230);
-
-        Text highscore = new Text();
-        highscore.setText("Highscore");
-        highscore.setFill(Color.BLACK);
-        highscore.setFont(Font.font("Sitka Small", 20));
-        highscore.setX((window.getWidth()-16) / 2 - highscore.getLayoutBounds().getWidth() / 2);
-        highscore.setY(270);
+        Text startGame = makeMenuTextTitle("Start Game", 150);
+        Text inventory = makeMenuTextTitle("Inventory", 190);
+        Text achievements = makeMenuTextTitle("Achievements", 230);
+        Text highscore = makeMenuTextTitle("Highscore", 270);
+        Text settings = makeMenuTextTitle("Settings", 310);
 
         ArrayList<Text> textArr = new ArrayList<>(
                 Arrays.asList(
                         startGame,
                         highscore,
                         inventory,
-                        achievements
+                        achievements,
+                        settings
                 )
         );
-        mainMenuSetupHighlightButtons(textArr);
+        highlightButtons(textArr);
 
+        // Configure animations:
         Duration animationDuration = Duration.millis(300);
         Interpolator interp = Interpolator.EASE_OUT;
-
         startGame.setOnMouseReleased(mouseEvent -> {
-            mainMenuButtonPressed(startGame, highscore, inventory, achievements, animationDuration, interp);
+            // Animate the button
+            animateButton(startGame, true, animationDuration, interp);
+            // Animate the other buttons
+            for (Text button : textArr) {
+                if (button != startGame) animateButton(button, false, animationDuration, interp);
+            }
 
             // Animate the background
             FillTransition transitionBackground = new FillTransition();
@@ -128,34 +112,75 @@ public class Main extends Application {
             game();
         });
         highscore.setOnMouseReleased(mouseEvent -> {
-            mainMenuButtonPressed(highscore, startGame, inventory, achievements, animationDuration, interp);
+            // Animate the button
+            animateButton(highscore, true, animationDuration, interp);
+            // Animate the other buttons
+            for (Text button : textArr) {
+                if (button != highscore) animateButton(button, false, animationDuration, interp);
+            }
 
             // TODO
         });
         inventory.setOnMouseReleased(mouseEvent -> {
-            mainMenuButtonPressed(inventory, startGame, highscore, achievements, animationDuration, interp);
+            // Animate the button
+            animateButton(inventory, true, animationDuration, interp);
+            // Animate the other buttons
+            for (Text button : textArr) {
+                if (button != inventory) animateButton(button, false, animationDuration, interp);
+            }
 
             // TODO
         });
         achievements.setOnMouseReleased(mouseEvent -> {
-            mainMenuButtonPressed(achievements, startGame, inventory, highscore, animationDuration, interp);
+            // Animate the button
+            animateButton(achievements, true, animationDuration, interp);
+            // Animate the other buttons
+            for (Text button : textArr) {
+                if (button != achievements) animateButton(button, false, animationDuration, interp);
+            }
+
+            // TODO
+        });
+        settings.setOnMouseReleased(mouseEvent -> {
+            // Animate the button
+            animateButton(settings, true, animationDuration, interp);
+            // Animate the other buttons
+            for (Text button : textArr) {
+                if (button != settings) animateButton(button, false, animationDuration, interp);
+            }
 
             // TODO
         });
 
         root.getChildren().add(bg);
         root.getChildren().add(menuText);
-        root.getChildren().add(inventory);
-        root.getChildren().add(achievements);
-        root.getChildren().add(highscore);
-        root.getChildren().add(startGame);
+        for (Text label : textArr) {
+            root.getChildren().add(label);
+        }
+    }
+
+    /**
+     * Configure a Text object.
+     * @param s The title for the Text object.
+     * @param posY The y-position for the Text object.
+     * @return The Text object.
+     */
+    public Text makeMenuTextTitle(String s, int posY) {
+        Text label = new Text();
+        label.setText(s);
+        label.setFill(Color.BLACK);
+        label.setFont(Font.font("Sitka Small", 20));
+//        label.setX((window.getWidth()-16) / 2 - label.getLayoutBounds().getWidth() / 2);
+        label.setX(window.getWidth() / 2 - label.getLayoutBounds().getWidth() / 2);
+        label.setY(posY);
+        return label;
     }
 
     /**
      * Makes it so that all buttons in the array get highlighted when hovered over.
      * @param arr An array of all the buttons
      */
-    public void mainMenuSetupHighlightButtons(ArrayList<Text> arr) {
+    public void highlightButtons(ArrayList<Text> arr) {
         for (Text button : arr) {
             button.setOnMouseEntered(mouseEvent -> button.setFill(Color.GREY));
             button.setOnMouseExited(mouseEvent -> button.setFill(Color.BLACK));
@@ -163,79 +188,27 @@ public class Main extends Application {
     }
 
     /**
-     * Makes a separate animation for the button if the button is clicked, and another animation
-     * for the buttons that didn't get clicked.
-     * @param clickedButton The button that is clicked.
-     * @param n1 The first button that isn't clicked.
-     * @param n2 The second button that isn't clicked.
-     * @param n3 The third button that isn't clicked.
+     * Animate a given button according to one of two predetermined animations.
+     * @param button The button which shall be animated.
+     * @param wasPressed Whether the button was pressed or not (determines animation).
      * @param animationDuration The duration of the animation.
-     * @param interp The interpolation method used for the animation.
+     * @param interp The interpolation of the animation.
      */
-    public void mainMenuButtonPressed(Text clickedButton, Text n1, Text n2, Text n3, Duration animationDuration, Interpolator interp) {
-        // Animate the clicked button
+    public void animateButton(Text button, boolean wasPressed, Duration animationDuration, Interpolator interp) {
+        double value = wasPressed ? .2 : -.07;
         ScaleTransition transition1 = new ScaleTransition();
         transition1.setDuration(animationDuration);
-        transition1.setByX(.2);
-        transition1.setByY(.2);
-        transition1.setNode(clickedButton);
+        transition1.setByX(value);
+        transition1.setByY(value);
+        transition1.setNode(button);
         transition1.setInterpolator(interp);
         transition1.play();
         FadeTransition transition2 = new FadeTransition();
         transition2.setDuration(animationDuration);
         transition2.setToValue(0);
-        transition2.setNode(clickedButton);
+        transition2.setNode(button);
         transition2.setInterpolator(interp);
         transition2.play();
-
-        // Animate the other buttons
-        // n1
-        ScaleTransition transition3 = new ScaleTransition();
-        transition3.setDuration(animationDuration);
-        transition3.setByX(-.07);
-        transition3.setByY(-.07);
-        transition3.setNode(n1);
-        transition3.setInterpolator(interp);
-        transition3.play();
-        FadeTransition transition4 = new FadeTransition();
-        transition4.setDuration(animationDuration);
-        transition4.setToValue(0);
-        transition4.setNode(n1);
-        transition4.setInterpolator(interp);
-        transition4.play();
-        // n2
-        ScaleTransition transition5 = new ScaleTransition();
-        transition5.setDuration(animationDuration);
-        transition5.setByX(-.07);
-        transition5.setByY(-.07);
-        transition5.setNode(n2);
-        transition5.setInterpolator(interp);
-        transition5.play();
-        FadeTransition transition6 = new FadeTransition();
-        transition6.setDuration(animationDuration);
-        transition6.setToValue(0);
-        transition6.setNode(n2);
-        transition6.setInterpolator(interp);
-        transition6.play();
-        // n3
-        ScaleTransition transition7 = new ScaleTransition();
-        transition7.setDuration(animationDuration);
-        transition7.setByX(-.07);
-        transition7.setByY(-.07);
-        transition7.setNode(n3);
-        transition7.setInterpolator(interp);
-        transition7.play();
-        FadeTransition transition8 = new FadeTransition();
-        transition8.setDuration(animationDuration);
-        transition8.setToValue(0);
-        transition8.setNode(n3);
-        transition8.setInterpolator(interp);
-        transition8.play();
-
-        // Wait
-        PauseTransition p = new PauseTransition(animationDuration);
-        p.setOnFinished(e -> window.setScene(gameScene));
-        p.play();
     }
 
     /**
@@ -297,6 +270,7 @@ public class Main extends Application {
      */
     public class Sprite {
         int posX, posY, height, width, velocity;
+        boolean dead;
 
         public Sprite(int posX, int posY, int height, int width, int velocity) {
             this.posX = posX;
@@ -304,39 +278,90 @@ public class Main extends Application {
             this.height = height;
             this.width = width;
             this.velocity = velocity;
+            this.dead = false;
         }
 
         /**
-         * Checks if this object and another object has collided.
-         * @param s The other object to do the collision check with.
+         * Checks if this object and another object has collided. Treats sprites as rectangles.
+         * @param who The other object to do the collision check with.
          * @return True if the two objects have collided, false if not.
          */
-        public boolean hasCollided(Sprite s) {
-            return false;
+        public boolean hasCollided(Sprite who) {
+            // This Sprite's restraints:
+            int xLeft1 = this.posX;
+            int xRight1 = this.posX + this.width;
+            int yUp1 = this.posY;
+            int yDown1 = this.posY + this.height;
+            // The other sprite's restraints:
+            int xLeft2 = who.posX;
+            int xRight2 = who.posX + who.width;
+            int yUp2 = who.posY;
+            int yDown2 = who.posY + who.height;
+
+            return (xLeft1 < xRight2) && (xLeft2 < xRight1) && (yUp1 < yDown2) && (yUp2 < yDown1);
         }
     }
 
-    // Player
-    public class Player {
-        int posX, posY, size, explosionStep;
-        boolean exploding, dead;
+    /**
+     * Enemies travelling towards the player.
+     */
+    public class Enemy extends Sprite {
+        int explosionStep, health;
+        boolean exploding;
         Image img;
 
-        // Constructor
-        public Player(int posX, int posY, int size, Image image) {
-            this.posX = posX;
-            this.posY = posY;
-            this.size = size;
-            this.img = image;
-            explosionStep = 0;
+        public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health) {
+            super(posX, posY, height, width, velocity);
+            this.img = img;
+            this.health = health;
+            this.explosionStep = 0;
+            this.exploding = false;
+        }
+    }
+
+    /**
+     * The player.
+     */
+    public class Player extends Enemy {
+
+        public Player(int posX, int posY, int height, int width, int velocity, Image img, int health) {
+            super(posX, posY, height, width, velocity, img, health);
+        }
+
+        /**
+         * Move the player to the left with respect to its velocity.
+         */
+        public void moveLeft() {
+            if (posX <= velocity) {
+                this.posX = 0;
+            } else {
+                this.posX -= velocity;
+            }
+        }
+
+        /**
+         * Move the player to the right with respect to its velocity.
+         */
+        public void moveRight() {
+            if (posX >= velocity - this.width) {
+                this.posX = velocity - this.width;
+            } else {
+                this.posX += velocity;
+            }
+        }
+    }
+
+    /**
+     * Bullets (shots) from either the player or enemies.
+     */
+    public class Shot extends Sprite {
+        String origin;
+        Color color;
+
+        public Shot(int posX, int posY, int height, int width, int velocity, String origin) {
+            super(posX, posY, height, width, velocity);
+            this.origin = origin;
+            this.color = Color.RED;
         }
     }
 }
-
-//    @Override
-//    public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-//        primaryStage.setTitle("Hello World");
-//        primaryStage.setScene(new Scene(root, 300, 275));
-//        primaryStage.show();
-//    }
