@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -290,7 +289,6 @@ public class Main extends Application {
     public void run(GraphicsContext gc) {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
 
     }
 
