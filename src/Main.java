@@ -16,7 +16,6 @@ import java.util.Arrays;
 
 public class Main extends Application {
 
-    static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
     static final int WINDOW_HEIGHT = 900;
     static final int WINDOW_WIDTH = 600;
     Stage window;
@@ -143,7 +142,7 @@ public class Main extends Application {
             transitionBackground.setOnFinished(e -> window.setScene(gameScene)); // switches to game scene
             transitionBackground.play();
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, gameBgColor);
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH - 16, WINDOW_HEIGHT - 39, gameBgColor);     // Corrects for misalignment because the window is not actually 600x900 for some reason???
             gameScene = gameMechanics.getGameScene();
         });
     }
