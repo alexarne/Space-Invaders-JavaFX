@@ -102,12 +102,8 @@ public class Main extends Application {
             transitionBackground.setToValue(gameBgColor);
             transitionBackground.setShape(bg);
             transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
+            transitionBackground.setOnFinished(e -> window.setScene(gameScene));
             transitionBackground.play();
-
-            // Wait
-            PauseTransition p = new PauseTransition(animationDuration);
-            p.setOnFinished(e -> window.setScene(gameScene));
-            p.play();
 
             game();
         });
@@ -196,6 +192,20 @@ public class Main extends Application {
      */
     public void animateButton(Text button, boolean wasPressed, Duration animationDuration, Interpolator interp) {
         double value = wasPressed ? .2 : -.07;
+        transitionScale(button, animationDuration, interp, value);
+        transitionFade(button, animationDuration, interp);
+    }
+
+    private void transitionFade(Text button, Duration animationDuration, Interpolator interp) {
+        FadeTransition transition2 = new FadeTransition();
+        transition2.setDuration(animationDuration);
+        transition2.setToValue(0);
+        transition2.setNode(button);
+        transition2.setInterpolator(interp);
+        transition2.play();
+    }
+
+    private void transitionScale(Text button, Duration animationDuration, Interpolator interp, double value) {
         ScaleTransition transition1 = new ScaleTransition();
         transition1.setDuration(animationDuration);
         transition1.setByX(value);
@@ -203,12 +213,6 @@ public class Main extends Application {
         transition1.setNode(button);
         transition1.setInterpolator(interp);
         transition1.play();
-        FadeTransition transition2 = new FadeTransition();
-        transition2.setDuration(animationDuration);
-        transition2.setToValue(0);
-        transition2.setNode(button);
-        transition2.setInterpolator(interp);
-        transition2.play();
     }
 
     /**
