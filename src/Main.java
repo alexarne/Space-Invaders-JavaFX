@@ -116,6 +116,17 @@ public class Main extends Application {
         return label;
     }
 
+    /**
+     * Makes it so that all buttons in the array get highlighted when hovered over.
+     * @param arr An array of all the buttons
+     */
+    public void highlightButtons(ArrayList<Text> arr) {
+        for (Text button : arr) {
+            button.setOnMouseEntered(mouseEvent -> button.setFill(Color.GREY));
+            button.setOnMouseExited(mouseEvent -> button.setFill(Color.BLACK));
+        }
+    }
+
     private void handleStartGame(Rectangle bg, Text menuText, Text startGame, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         startGame.setOnMouseReleased(mouseEvent -> {
             // Animate the button
@@ -189,17 +200,6 @@ public class Main extends Application {
 
             // TODO
         });
-    }
-
-    /**
-     * Makes it so that all buttons in the array get highlighted when hovered over.
-     * @param arr An array of all the buttons
-     */
-    public void highlightButtons(ArrayList<Text> arr) {
-        for (Text button : arr) {
-            button.setOnMouseEntered(mouseEvent -> button.setFill(Color.GREY));
-            button.setOnMouseExited(mouseEvent -> button.setFill(Color.BLACK));
-        }
     }
 
     /**
