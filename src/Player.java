@@ -1,3 +1,4 @@
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 /**
@@ -9,6 +10,14 @@ public class Player extends Rocket {
     public Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowWidth = windowWidth;
+    }
+
+    /**
+     * Draws the player onto the canvas.
+     * @param gc The canvas.
+     */
+    public void draw(GraphicsContext gc) {
+        gc.drawImage(img, posX, posY);
     }
 
     /**
