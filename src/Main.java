@@ -95,6 +95,7 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != startGame) animateButton(button, false, animationDuration, interp);
             }
+            transitionFade(menuText, animationDuration, interp);
 
             // Animate the background
             FillTransition transitionBackground = new FillTransition();
