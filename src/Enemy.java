@@ -5,9 +5,11 @@ import javafx.scene.image.Image;
  */
 public class Enemy extends Rocket {
     int windowHeight;
+    boolean ableToShoot;
 
-    public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowHeight) {
+    public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowHeight = windowHeight;
+        this.ableToShoot = ableToShoot;
     }
 }
