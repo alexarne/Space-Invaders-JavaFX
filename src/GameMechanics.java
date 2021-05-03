@@ -1,3 +1,4 @@
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -8,8 +9,6 @@ import javafx.util.Duration;
 import javafx.scene.paint.Color;
 
 public class GameMechanics {
-    // TODO create mvp
-    
     private int WINDOW_WIDTH;
     private int WINDOW_HEIGHT;
     private GraphicsContext gc;
