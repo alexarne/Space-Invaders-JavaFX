@@ -5,16 +5,22 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
-import java.awt.*;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class GameMechanics {
     private int WINDOW_WIDTH;
     private int WINDOW_HEIGHT;
+    private GraphicsContext gc;
+    private Scene gameScene;
+    private Color gameBgColor;
 
-    public GameMechanics(int width, int height) {
+    public GameMechanics(int width, int height, GraphicsContext gc, Scene gameScene, Color color) {
         WINDOW_WIDTH = width;
         WINDOW_HEIGHT = height;
+        this.gc = gc;
+        this.gameScene = gameScene;
+        gameBgColor = color;
     }
     /**
      * Start the game.
@@ -23,7 +29,7 @@ public class GameMechanics {
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
-        Timeline timeline = new Canvas(new KeyFrame(Duration.millis(100), e -> run(gc)));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> run(gc)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
