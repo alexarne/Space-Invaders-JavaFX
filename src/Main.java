@@ -127,6 +127,7 @@ public class Main extends Application {
         }
     }
 
+    // Animate on button press and take to game.
     private void handleStartGame(Rectangle bg, Text menuText, Text startGame, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         startGame.setOnMouseReleased(mouseEvent -> {
             // Animate the button
