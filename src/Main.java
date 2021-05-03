@@ -144,7 +144,7 @@ public class Main extends Application {
             transitionBackground.setToValue(gameBgColor);
             transitionBackground.setShape(bg);
             transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
-            transitionBackground.setOnFinished(e -> window.setScene(gameScene));
+            transitionBackground.setOnFinished(e -> window.setScene(gameScene)); // switches to game scene
             transitionBackground.play();
 
             game();
