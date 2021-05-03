@@ -145,8 +145,8 @@ public class Main extends Application {
             transitionBackground.setOnFinished(e -> window.setScene(gameScene)); // switches to game scene
             transitionBackground.play();
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, gc, gameScene, gameBgColor);
-            gameMechanics.game();
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, gameBgColor);
+            gameScene = gameMechanics.getGameScene();
         });
     }
 
