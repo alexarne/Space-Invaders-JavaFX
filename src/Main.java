@@ -56,23 +56,14 @@ public class Main extends Application {
         Group root = new Group();
         mainScene = new Scene(root);
 
-        Rectangle bg = new Rectangle();
-        bg.setHeight(WINDOW_HEIGHT);
-        bg.setWidth(WINDOW_WIDTH);
-        bg.setFill(Color.WHITE);
+        Rectangle bg = getBackground();
 
-        Text menuText = new Text();
-        menuText.setText("Main Menu");
-        menuText.setFill(Color.BLACK);
-        menuText.setFont(Font.font("Sitka Small", 40));
-        menuText.setX((window.getWidth()-16) / 2 - menuText.getLayoutBounds().getWidth() / 2);
-        menuText.setY(100);
-
-        Text startGame = makeMenuTextTitle("Start Game", 150);
-        Text inventory = makeMenuTextTitle("Inventory", 190);
-        Text achievements = makeMenuTextTitle("Achievements", 230);
-        Text highscore = makeMenuTextTitle("Highscore", 270);
-        Text settings = makeMenuTextTitle("Settings", 310);
+        Text menuText = makeMenuTextTitle("Main Menu", 100, 40);
+        Text startGame = makeMenuTextTitle("Start Game", 150, 20);
+        Text inventory = makeMenuTextTitle("Inventory", 190, 20);
+        Text achievements = makeMenuTextTitle("Achievements", 230, 20);
+        Text highscore = makeMenuTextTitle("Highscore", 270, 20);
+        Text settings = makeMenuTextTitle("Settings", 310, 20);
 
         ArrayList<Text> textArr = new ArrayList<>(
                 Arrays.asList(
@@ -85,9 +76,47 @@ public class Main extends Application {
         );
         highlightButtons(textArr);
 
-        // Configure animations:
+        // Configure animations
         Duration animationDuration = Duration.millis(300);
         Interpolator interp = Interpolator.EASE_OUT;
+        handleStartGame(bg, menuText, startGame, textArr, animationDuration, interp);
+        handleHighscore(highscore, textArr, animationDuration, interp);
+        handleInventory(inventory, textArr, animationDuration, interp);
+        handleAchievements(achievements, textArr, animationDuration, interp);
+        handleSettings(settings, textArr, animationDuration, interp);
+
+        root.getChildren().add(bg);
+        root.getChildren().add(menuText);
+        for (Text label : textArr) {
+            root.getChildren().add(label);
+        }
+    }
+
+    private Rectangle getBackground() {
+        Rectangle bg = new Rectangle();
+        bg.setHeight(WINDOW_HEIGHT);
+        bg.setWidth(WINDOW_WIDTH);
+        bg.setFill(Color.WHITE);
+        return bg;
+    }
+
+    /**
+     * Configure a Text object.
+     * @param s The title for the Text object.
+     * @param posY The y-position for the Text object.
+     * @return The Text object.
+     */
+    public Text makeMenuTextTitle(String s, int posY, int fontSize) {
+        Text label = new Text();
+        label.setText(s);
+        label.setFill(Color.BLACK);
+        label.setFont(Font.font("Sitka Small", fontSize));
+        label.setX((window.getWidth()-16) / 2 - label.getLayoutBounds().getWidth() / 2);
+        label.setY(posY);
+        return label;
+    }
+
+    private void handleStartGame(Rectangle bg, Text menuText, Text startGame, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         startGame.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(startGame, true, animationDuration, interp);
@@ -108,6 +137,9 @@ public class Main extends Application {
 
             game();
         });
+    }
+
+    private void handleHighscore(Text highscore, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         highscore.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(highscore, true, animationDuration, interp);
@@ -118,6 +150,9 @@ public class Main extends Application {
 
             // TODO
         });
+    }
+
+    private void handleInventory(Text inventory, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         inventory.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(inventory, true, animationDuration, interp);
@@ -128,6 +163,9 @@ public class Main extends Application {
 
             // TODO
         });
+    }
+
+    private void handleAchievements(Text achievements, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         achievements.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(achievements, true, animationDuration, interp);
@@ -138,6 +176,9 @@ public class Main extends Application {
 
             // TODO
         });
+    }
+
+    private void handleSettings(Text settings, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         settings.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(settings, true, animationDuration, interp);
@@ -148,29 +189,6 @@ public class Main extends Application {
 
             // TODO
         });
-
-        root.getChildren().add(bg);
-        root.getChildren().add(menuText);
-        for (Text label : textArr) {
-            root.getChildren().add(label);
-        }
-    }
-
-    /**
-     * Configure a Text object.
-     * @param s The title for the Text object.
-     * @param posY The y-position for the Text object.
-     * @return The Text object.
-     */
-    public Text makeMenuTextTitle(String s, int posY) {
-        Text label = new Text();
-        label.setText(s);
-        label.setFill(Color.BLACK);
-        label.setFont(Font.font("Sitka Small", 20));
-//        label.setX((window.getWidth()-16) / 2 - label.getLayoutBounds().getWidth() / 2);
-        label.setX(window.getWidth() / 2 - label.getLayoutBounds().getWidth() / 2);
-        label.setY(posY);
-        return label;
     }
 
     /**
