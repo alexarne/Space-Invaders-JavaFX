@@ -22,7 +22,6 @@ public class Main extends Application {
     static final int WINDOW_WIDTH = 600;
     Stage window;
     Scene mainScene, gameScene;
-    private GraphicsContext gc;
     private Color gameBgColor = Color.grayRgb(20);
 
     public static void main(String[] args) {
