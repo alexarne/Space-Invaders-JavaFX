@@ -247,28 +247,8 @@ public class Main extends Application {
 
         gameSetup();
 
-//        window.setScene(new Scene(new StackPane(canvas)));
-
         StackPane root = new StackPane(canvas);
         gameScene = new Scene(root);
-
-//        Group root = new Group();
-//        gameScene = new Scene(root, Color.BLACK);
-//
-//        Text text = new Text();
-//        text.setText("lola issa game");
-//        text.setFill(Color.WHITE);
-//        text.setX(250);
-//        text.setY(350);
-//        text.setFont(Font.font("Sitka Small", 20));
-//
-//        Rectangle rectangle = new Rectangle(50, 50, 64, 64);
-//        rectangle.setFill(Color.BLUE);
-//        rectangle.setStroke(Color.GREEN);
-//        rectangle.setStrokeWidth(10);
-//
-//        root.getChildren().add(rectangle);
-//        root.getChildren().add(text);
     }
 
     /**
