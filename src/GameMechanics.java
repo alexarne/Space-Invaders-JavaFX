@@ -82,6 +82,7 @@ public class GameMechanics {
         gameSetup();
     }
 
+    // TODO: When pressing one key (e.g. move to right) one cannot press others (e.g. shoot)
     private void handleKeyboardMovement() {
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.A) {
