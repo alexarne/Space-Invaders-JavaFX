@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,6 +13,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public class GameMechanics {
@@ -25,6 +27,11 @@ public class GameMechanics {
 
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
     private boolean playerInPosition;
+
+    // Fixing shots
+    private double mouseX;
+    List<Shot> shots = new ArrayList<>();
+    final int MAX_BULLETS = 20;
 
     // TODO: I keep getting errors about URI not found, need to fix.
 //    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
@@ -66,6 +73,16 @@ public class GameMechanics {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(7), e -> run()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        canvas.setCursor(Cursor.MOVE);
+        canvas.setOnMouseMoved(e -> mouseX = e.getX());
+        canvas.setOnMouseClicked(e -> {
+            if(shots.size() < MAX_BULLETS) shots.add(player.shoot());
+//            if(gameOver) {
+//                gameOver = false;
+//                gameSetup();
+//            }
+        });
 
         gameSetup();
     }
@@ -178,6 +195,17 @@ public class GameMechanics {
 //            // TODO handle inputs
 //            enemy.draw(gc);
 //        }
+
+        int score = 0; // when adding collision increase score for each kill
+        for (int j = shots.size() - 1; j >=0 ; j--) {
+            Shot shot = shots.get(j);
+            if(shot.posY < 0 || shot.toRemove)  {
+                shots.remove(i);
+                continue;
+            }
+            shot.update();
+            shot.draw(gc, score);
+        }
 
     }
 

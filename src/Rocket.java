@@ -15,4 +15,10 @@ public class Rocket extends Sprite {
         this.explosionStep = 0;
         this.exploding = false;
     }
+
+    public Shot shoot() {
+        int vel = 20;
+        int yPos = (int) posY - Shot.size;
+        return new Shot(posX + height / 2 - Shot.size / 2, yPos, height, width, vel);
+    }
 }
