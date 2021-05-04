@@ -28,6 +28,7 @@ public class GameMechanics {
 
     static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
     private boolean ableToShoot;
+    private boolean enemyInPosition;
 
     private Player player;
     private Player enemy;
@@ -39,6 +40,8 @@ public class GameMechanics {
         this.gameBgColor = color;
         this.rand = new Random();
         ableToShoot = true;
+        playerInPosition = false;
+        enemyInPosition = false;
         game();
     }
 
@@ -103,11 +106,11 @@ public class GameMechanics {
         enemyIn.setFromY(500);
         enemyIn.setToY(334);
         enemyIn.setOnFinished(e -> {
-            playerInPosition = true;
+            enemyInPosition = true;
             root.getChildren().remove(enemySub);
         });
-        playerIn.setNode(enemySub);
-        playerIn.play();
+        enemyIn.setNode(enemySub);
+        enemyIn.play();
 
         stars = new ArrayList<>();
     }
