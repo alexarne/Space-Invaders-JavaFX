@@ -18,7 +18,7 @@ public class Player extends Rocket {
      * @param health Health.
      * @param windowWidth The screens width.
      */
-    public Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth) {
+    public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowWidth = windowWidth;
     }

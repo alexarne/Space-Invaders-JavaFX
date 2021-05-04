@@ -18,7 +18,7 @@ public class Shot extends Sprite {
      * @param width Width in x-axis.
      * @param velocity Speed.
      */
-    public Shot(int posX, int posY, int height, int width, int velocity) { // TODO: Add String origin
+    public Shot(double posX, double posY, int height, int width, double velocity) { // TODO: Add String origin
         super(posX, posY, height, width, velocity);
         this.origin = origin; // String origin
         this.color = Color.RED;
