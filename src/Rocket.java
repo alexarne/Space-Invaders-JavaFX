@@ -17,8 +17,8 @@ public class Rocket extends Sprite {
     }
 
     public Shot shoot() {
-        int vel = 20;
+        int bulletVelocity = 2;
         int yPos = (int) posY - Shot.size;
-        return new Shot(posX + height / 2 - Shot.size / 2, yPos, height, width, vel);
+        return new Shot(posX + height / 2 - Shot.size / 2, yPos, height, width, bulletVelocity);
     }
 }

@@ -32,6 +32,7 @@ public class GameMechanics {
     private double mouseX;
     List<Shot> shots = new ArrayList<>();
     final int MAX_BULLETS = 20;
+    boolean gameOver = false;
 
     // TODO: I keep getting errors about URI not found, need to fix.
 //    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
@@ -74,17 +75,19 @@ public class GameMechanics {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
+        handleMovement(canvas);
+
+        gameSetup();
+    }
+
+    private void handleMovement(Canvas canvas) {
         canvas.setCursor(Cursor.MOVE);
         canvas.setOnMouseMoved(e -> mouseX = e.getX());
         canvas.setOnMouseClicked(e -> {
-            if(shots.size() < MAX_BULLETS) shots.add(player.shoot());
-//            if(gameOver) {
-//                gameOver = false;
-//                gameSetup();
-//            }
+            if(shots.size() < MAX_BULLETS) {
+                shots.add(player.shoot());
+            }
         });
-
-        gameSetup();
     }
 
     /**
