@@ -27,7 +27,7 @@ public class GameMechanics {
     private boolean playerInPosition;
 
     // TODO: I keep getting errors about URI not found, need to fix.
-    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
+//    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
     private boolean enemyInPosition;
     private boolean ableToShoot;
 
@@ -174,10 +174,10 @@ public class GameMechanics {
         }
 
         // Enemies
-        if (enemyInPosition) {
-            // TODO handle inputs
-            enemy.draw(gc);
-        }
+//        if (enemyInPosition) {
+//            // TODO handle inputs
+//            enemy.draw(gc);
+//        }
 
     }
 
