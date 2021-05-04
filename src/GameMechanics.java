@@ -72,6 +72,9 @@ public class GameMechanics {
         // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
         player = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT - 128, 64, 64, 10, PLAYER_IMG, 100, WINDOW_WIDTH);
 
+        // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
+        enemy = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT - 128, 64, 64, 10, PLAYER_IMG, 100, WINDOW_WIDTH);
+
         // Animate "the player" as if it's flying in from below
         ImageView playerSub = new ImageView(PLAYER_IMG);
         playerSub.setX(WINDOW_WIDTH / 2 - 32);
