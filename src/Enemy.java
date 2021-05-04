@@ -9,16 +9,16 @@ public class Enemy extends Rocket {
     boolean ableToShoot;
 
     /**
-     * 
-     * @param posX
-     * @param posY
-     * @param height
-     * @param width
-     * @param velocity
-     * @param img
-     * @param health
-     * @param ableToShoot
-     * @param windowHeight
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     * @param img Image.
+     * @param health Health.
+     * @param ableToShoot Boolean that controls whether the enemy can shoot or not.
+     * @param windowHeight Screen height.
      */
     public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight) {
         super(posX, posY, height, width, velocity, img, health);
