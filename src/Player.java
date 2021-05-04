@@ -7,6 +7,17 @@ import javafx.scene.image.Image;
 public class Player extends Rocket {
     int windowWidth;
 
+    /**
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     * @param img Image.
+     * @param health Health.
+     * @param windowWidth The screens width.
+     */
     public Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowWidth = windowWidth;

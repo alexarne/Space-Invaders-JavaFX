@@ -8,6 +8,15 @@ import javafx.scene.paint.Color;
 public class Star extends Sprite {
     Color color;
 
+    /**
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     * @param color Star color.
+     */
     public Star(int posX, double posY, int height, int width, double velocity, Color color) {
         super(posX, posY, height, width, velocity);
         this.color = color;

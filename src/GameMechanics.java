@@ -1,19 +1,20 @@
-
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public class GameMechanics {
@@ -23,18 +24,28 @@ public class GameMechanics {
     private StackPane root;
     private Scene gameScene;
     private Color gameBgColor;
-    private Random r;
-    private boolean playerInPosition;
+    private Random rnd;
+
+    // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
+    private boolean playerInPosition;
+
+    // Shots
+    private double mouseX;
+    List<Shot> shots = new ArrayList<>();
+    final int MAX_BULLETS = 20;
+    boolean gameOver = false;
 
     private Player player;
+    private Enemy enemy;
     private ArrayList<Star> stars;
 
     public GameMechanics(int width, int height, Color color) {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
-        this.r = new Random();
+        this.rnd = new Random();
+        playerInPosition = false;
         game();
     }
 
@@ -59,7 +70,40 @@ public class GameMechanics {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
+        handleKeyboardMovement();
+        handleMouseMovement(canvas);
+
         gameSetup();
+    }
+
+    // When pressing one key (e.g. move to right) one cannot press others (e.g. shoot)
+    // TODO: See tutorial on how to fix these with booleans
+    private void handleKeyboardMovement() {
+        gameScene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.A) {
+                player.moveLeft();
+            } else if (e.getCode() == KeyCode.D) {
+                player.moveRight();
+            }
+            else if (e.getCode() == KeyCode.SPACE) {
+                // TODO: Fix bug. Cannot shoot when size > max bullets
+                if(shots.size() < MAX_BULLETS) {
+                    shots.add(player.shoot());
+                } else {
+                    // set shot.getToRemove() = true;
+                }
+            }
+        });
+    }
+
+    private void handleMouseMovement(Canvas canvas) {
+        canvas.setCursor(Cursor.MOVE);
+        canvas.setOnMouseMoved(e -> mouseX = e.getX());
+        canvas.setOnMouseClicked(e -> {
+            if(shots.size() < MAX_BULLETS) {
+                shots.add(player.shoot());
+            }
+        });
     }
 
     /**
@@ -85,6 +129,11 @@ public class GameMechanics {
         playerIn.setNode(playerSub);
         playerIn.play();
 
+        // TODO: Setup enemies
+        // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
+        // enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
+
+
         stars = new ArrayList<>();
     }
 
@@ -95,23 +144,14 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-
-//        gc.setFill(Color.RED);
-//        gc.fillOval(100, 100, 200, 100);
-//        gc.fillRect(100, 100, 100, 100);
-//        gc.fillRect(100, 400, 1, 1);
-//        gc.fillRect(100, 500, 5, 5);
-//        gc.fillRect(100, 600, 10, 10);
-
         // Stars
-
         ArrayList<Star> deadStars = new ArrayList<>();
         Iterator<Star> i = stars.iterator();
         while (i.hasNext()) {
             Star star = i.next();
             if (star.dead) {
                 deadStars.add(star);
-            } else if (star.posY >= WINDOW_HEIGHT - star.height) {
+            } else if (isOutsideScreen(star)) {
                 star.dead = true;
             } else {
                 star.draw(gc);
@@ -122,29 +162,33 @@ public class GameMechanics {
             stars.remove(deadStar);
         }
 
-//        for (Star star : stars) {
-//            if (star.dead) {
-//                stars.remove(star);
-//            } else if (star.posY >= WINDOW_HEIGHT - star.height) {
-//                star.dead = true;
-//            } else {
-//                star.draw(gc);
-//            }
-//        }
-
-        if (stars.size() <= 5 && r.nextFloat() < 0.3) {
+        if (stars.size() <= 5 && rnd.nextFloat() < 0.3) {
             stars.add(createStar());
-        } else if (stars.size() <= 30 && r.nextFloat() < 0.05) {
+        } else if (stars.size() <= 30 && rnd.nextFloat() < 0.05) {
             stars.add(createStar());
         }
 
         // Player
-
         if (playerInPosition) {
             // TODO handle inputs
             player.draw(gc);
         }
 
+        // Shots
+        int score = 0; // when adding collision increase score for each kill
+        for (int j = shots.size() - 1; j >=0 ; j--) {
+            Shot shot = shots.get(j);
+            if(shot.posY < 0 || shot.toRemove)  {
+                shots.remove(j);
+                continue;
+            }
+            shot.update();
+            shot.draw(gc, score);
+        }
+    }
+
+    private boolean isOutsideScreen(Star star) {
+        return star.posY >= WINDOW_HEIGHT - star.height;
     }
 
     /**
@@ -152,10 +196,10 @@ public class GameMechanics {
      * @return A randomly generated star, using set bounds.
      */
     public Star createStar() {
-        double distance = r.nextDouble();
-        int height = 4 + r.nextInt(2);
+        double distance = rnd.nextDouble();
+        int height = 4 + rnd.nextInt(2);
         int width = height;
-        int posX = r.nextInt(WINDOW_WIDTH - width + 1);
+        int posX = rnd.nextInt(WINDOW_WIDTH - width + 1);
         double posY = -width;
         double velocity = .6 + distance;
         Color color = Color.grayRgb(20 + 1 + (int) (distance * 100));       // By principle of proximity = stronger light only

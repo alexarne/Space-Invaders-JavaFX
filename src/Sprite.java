@@ -7,6 +7,14 @@ public class Sprite {
     double posY, velocity;
     boolean dead;
 
+    /**
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     */
     public Sprite(int posX, double posY, int height, int width, double velocity) {
         this.posX = posX;
         this.posY = posY;
