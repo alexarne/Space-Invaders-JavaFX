@@ -10,6 +10,14 @@ public class Shot extends Sprite {
     static final int size = 8;
     public boolean toRemove;
 
+    /**
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     */
     public Shot(int posX, int posY, int height, int width, int velocity) { // TODO: Add String origin
         super(posX, posY, height, width, velocity);
         this.origin = origin; // String origin

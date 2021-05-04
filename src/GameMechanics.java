@@ -144,13 +144,6 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-//        gc.setFill(Color.RED);
-//        gc.fillOval(100, 100, 200, 100);
-//        gc.fillRect(100, 100, 100, 100);
-//        gc.fillRect(100, 400, 1, 1);
-//        gc.fillRect(100, 500, 5, 5);
-//        gc.fillRect(100, 600, 10, 10);
-
         // Stars
         ArrayList<Star> deadStars = new ArrayList<>();
         Iterator<Star> i = stars.iterator();
@@ -158,7 +151,7 @@ public class GameMechanics {
             Star star = i.next();
             if (star.dead) {
                 deadStars.add(star);
-            } else if (star.posY >= WINDOW_HEIGHT - star.height) {
+            } else if (isOutsideScreen(star)) {
                 star.dead = true;
             } else {
                 star.draw(gc);
@@ -168,16 +161,6 @@ public class GameMechanics {
         for (Star deadStar : deadStars) {
             stars.remove(deadStar);
         }
-
-//        for (Star star : stars) {
-//            if (star.dead) {
-//                stars.remove(star);
-//            } else if (star.posY >= WINDOW_HEIGHT - star.height) {
-//                star.dead = true;
-//            } else {
-//                star.draw(gc);
-//            }
-//        }
 
         if (stars.size() <= 5 && rnd.nextFloat() < 0.3) {
             stars.add(createStar());
@@ -191,12 +174,6 @@ public class GameMechanics {
             player.draw(gc);
         }
 
-        // Enemies
-//        if (enemyInPosition) {
-//            // TODO handle inputs
-//            enemy.draw(gc);
-//        }
-
         int score = 0; // when adding collision increase score for each kill
         for (int j = shots.size() - 1; j >=0 ; j--) {
             Shot shot = shots.get(j);
@@ -207,6 +184,10 @@ public class GameMechanics {
             shot.update();
             shot.draw(gc, score);
         }
+    }
+
+    private boolean isOutsideScreen(Star star) {
+        return star.posY >= WINDOW_HEIGHT - star.height;
     }
 
     /**
