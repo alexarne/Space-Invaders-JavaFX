@@ -3,10 +3,11 @@
  * Any substantial object which is drawn: Player, Enemies, Bullets, Stars, etc..
  */
 public class Sprite {
-    int posX, posY, height, width, velocity;
+    int posX, height, width;
+    double posY, velocity;
     boolean dead;
 
-    public Sprite(int posX, int posY, int height, int width, int velocity) {
+    public Sprite(int posX, double posY, int height, int width, double velocity) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -24,13 +25,13 @@ public class Sprite {
         // This Sprite's restraints:
         int xLeft1 = this.posX;
         int xRight1 = this.posX + this.width;
-        int yUp1 = this.posY;
-        int yDown1 = this.posY + this.height;
+        double yUp1 = this.posY;
+        double yDown1 = this.posY + this.height;
         // The other sprite's restraints:
         int xLeft2 = who.posX;
         int xRight2 = who.posX + who.width;
-        int yUp2 = who.posY;
-        int yDown2 = who.posY + who.height;
+        double yUp2 = who.posY;
+        double yDown2 = who.posY + who.height;
 
         return (xLeft1 < xRight2) && (xLeft2 < xRight1) && (yUp1 < yDown2) && (yUp2 < yDown1);
     }
