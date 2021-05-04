@@ -7,6 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
@@ -76,6 +77,16 @@ public class GameMechanics {
         timeline.play();
 
         handlePlayerMovement(canvas);
+
+        gameScene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.A) {
+                player.moveLeft();
+            } else if (e.getCode() == KeyCode.D) {
+                player.moveRight();
+            } else if (e.getCode() == KeyCode.SPACE) {
+                player.shoot();
+            }
+        });
 
         gameSetup();
     }
