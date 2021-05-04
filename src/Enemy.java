@@ -8,6 +8,18 @@ public class Enemy extends Rocket {
     int windowHeight;
     boolean ableToShoot;
 
+    /**
+     * 
+     * @param posX
+     * @param posY
+     * @param height
+     * @param width
+     * @param velocity
+     * @param img
+     * @param health
+     * @param ableToShoot
+     * @param windowHeight
+     */
     public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowHeight = windowHeight;
