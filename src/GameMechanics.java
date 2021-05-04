@@ -71,19 +71,21 @@ public class GameMechanics {
         timeline.play();
 
         handleKeyboardMovement();
-        // handleMouseMovement(canvas);
+        handleMouseMovement(canvas);
 
         gameSetup();
     }
 
-    // TODO: When pressing one key (e.g. move to right) one cannot press others (e.g. shoot)
+    // When pressing one key (e.g. move to right) one cannot press others (e.g. shoot)
+    // TODO: See tutorial on how to fix these with booleans
     private void handleKeyboardMovement() {
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.A) {
                 player.moveLeft();
             } else if (e.getCode() == KeyCode.D) {
                 player.moveRight();
-            } else if (e.getCode() == KeyCode.SPACE) {
+            }
+            else if (e.getCode() == KeyCode.SPACE) {
                 // TODO: Fix bug. Cannot shoot when size > max bullets
                 if(shots.size() < MAX_BULLETS) {
                     shots.add(player.shoot());
@@ -199,13 +201,12 @@ public class GameMechanics {
         for (int j = shots.size() - 1; j >=0 ; j--) {
             Shot shot = shots.get(j);
             if(shot.posY < 0 || shot.toRemove)  {
-                shots.remove(i);
+                shots.remove(j);
                 continue;
             }
             shot.update();
             shot.draw(gc, score);
         }
-
     }
 
     /**
