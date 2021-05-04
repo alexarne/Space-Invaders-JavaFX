@@ -8,8 +8,6 @@ public class Enemy extends Rocket {
     int windowHeight;
     boolean ableToShoot;
 
-    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
-
     public Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowHeight = windowHeight;

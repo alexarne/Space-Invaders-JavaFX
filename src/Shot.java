@@ -30,18 +30,14 @@ public class Shot extends Sprite {
      */
     public void draw(GraphicsContext gc, int score) {
         gc.setFill(Color.ORANGE);
-        if (scoreIsBetween50and70orGreaterThan120(score)) {
-            enableWeaponUpgrade(gc);
+        if (score >= 60 && score <= 80 || score >= 150) {
+            upgradeWeapon(gc);
         } else {
             shootNormalBullets(gc);
         }
     }
 
-    private boolean scoreIsBetween50and70orGreaterThan120(int score) {
-        return score >= 50 && score <= 70 || score >= 120;
-    }
-
-    private void enableWeaponUpgrade(GraphicsContext gc) {
+    private void upgradeWeapon(GraphicsContext gc) {
         gc.setFill(Color.YELLOWGREEN);
         velocity = 50;
         gc.fillRect(posX-5, posY-10, size+10, size+30);

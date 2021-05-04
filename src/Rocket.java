@@ -19,7 +19,7 @@ public class Rocket extends Sprite {
     public Shot shoot() {
         int bulletVelocity = 2;
         int xPos = posX + height / 2 - Shot.getSize() / 2;
-        int yPos = (int) posY - Shot.getSize(); // Needs to be converted to int instead of double
+        int yPos = (int) posY - Shot.getSize(); // Needs to be converted from double to int
         return new Shot(xPos, yPos, height, width, bulletVelocity);
     }
 }

@@ -75,12 +75,12 @@ public class GameMechanics {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
-        handleMovement(canvas);
+        handlePlayerMovement(canvas);
 
         gameSetup();
     }
 
-    private void handleMovement(Canvas canvas) {
+    private void handlePlayerMovement(Canvas canvas) {
         canvas.setCursor(Cursor.MOVE);
         canvas.setOnMouseMoved(e -> mouseX = e.getX());
         canvas.setOnMouseClicked(e -> {
