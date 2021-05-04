@@ -1,4 +1,3 @@
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -24,15 +23,15 @@ public class GameMechanics {
     private Color gameBgColor;
     private Random rand;
 
-    private boolean playerInPosition;
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
+    private boolean playerInPosition;
 
     static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
-    private boolean ableToShoot;
     private boolean enemyInPosition;
+    private boolean ableToShoot;
 
     private Player player;
-    private Player enemy;
+    private Enemy enemy;
     private ArrayList<Star> stars;
 
     public GameMechanics(int width, int height, Color color) {
@@ -100,7 +99,7 @@ public class GameMechanics {
 
         // Animate "the player" as if it's flying in from below
         ImageView enemySub = new ImageView(ENEMY1_IMG);
-        enemySub.setX(WINDOW_WIDTH / 2 - 32);
+        enemySub.setX(WINDOW_WIDTH / 3);
         enemySub.setY(100);
         root.getChildren().add(enemySub);
         TranslateTransition enemyIn = new TranslateTransition();
