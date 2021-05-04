@@ -50,7 +50,7 @@ public class GameMechanics {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
-        this.rand = new Random();
+        this.rnd = new Random();
         ableToShoot = true;
         playerInPosition = false; // TODO: Remove?
         enemyInPosition = false;
@@ -202,9 +202,9 @@ public class GameMechanics {
 //            }
 //        }
 
-        if (stars.size() <= 5 && rand.nextFloat() < 0.3) {
+        if (stars.size() <= 5 && rnd.nextFloat() < 0.3) {
             stars.add(createStar());
-        } else if (stars.size() <= 30 && rand.nextFloat() < 0.05) {
+        } else if (stars.size() <= 30 && rnd.nextFloat() < 0.05) {
             stars.add(createStar());
         }
 
@@ -238,10 +238,10 @@ public class GameMechanics {
      * @return A randomly generated star, using set bounds.
      */
     public Star createStar() {
-        double distance = rand.nextDouble();
-        int height = 4 + rand.nextInt(2);
+        double distance = rnd.nextDouble();
+        int height = 4 + rnd.nextInt(2);
         int width = height;
-        int posX = rand.nextInt(WINDOW_WIDTH - width + 1);
+        int posX = rnd.nextInt(WINDOW_WIDTH - width + 1);
         double posY = -width;
         double velocity = .6 + distance;
         Color color = Color.grayRgb(20 + 1 + (int) (distance * 100));       // By principle of proximity = stronger light only
