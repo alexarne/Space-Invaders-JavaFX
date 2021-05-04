@@ -31,7 +31,7 @@ public class Shot extends Sprite {
         }
     }
 
-    public int getSize() {
+    public static int getSize() {
         return size;
     }
 }
