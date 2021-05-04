@@ -76,22 +76,28 @@ public class GameMechanics {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
-        handlePlayerMovement(canvas);
+        handleKeyboardMovement();
+        // handleMouseMovement(canvas);
 
+        gameSetup();
+    }
+
+    private void handleKeyboardMovement() {
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.A) {
                 player.moveLeft();
             } else if (e.getCode() == KeyCode.D) {
                 player.moveRight();
             } else if (e.getCode() == KeyCode.SPACE) {
-                player.shoot();
+                // TODO: Fix bug. Cannot shoot when size > max bullets
+                if(shots.size() < MAX_BULLETS) {
+                    shots.add(player.shoot());
+                }
             }
         });
-
-        gameSetup();
     }
 
-    private void handlePlayerMovement(Canvas canvas) {
+    private void handleMouseMovement(Canvas canvas) {
         canvas.setCursor(Cursor.MOVE);
         canvas.setOnMouseMoved(e -> mouseX = e.getX());
         canvas.setOnMouseClicked(e -> {
