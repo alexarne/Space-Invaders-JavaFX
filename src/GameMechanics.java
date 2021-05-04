@@ -30,6 +30,7 @@ public class GameMechanics {
     static final Image ENEMY3_IMG = new Image("Assets/Images/enemy3.png");
 
     private Player player;
+    private Player enemy;
     private ArrayList<Star> stars;
 
     public GameMechanics(int width, int height, Color color) {
