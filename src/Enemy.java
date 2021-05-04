@@ -20,6 +20,6 @@ public class Enemy extends Rocket {
      */
     public void draw(GraphicsContext gc) {
         gc.drawImage(img, posX, posY);
-        posY += velocity;
+        // posY += velocity;
     }
 }
