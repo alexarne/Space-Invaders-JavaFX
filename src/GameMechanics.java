@@ -23,6 +23,7 @@ public class GameMechanics {
     private Scene gameScene;
     private Color gameBgColor;
     private Random rand;
+
     private boolean playerInPosition;
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
 
@@ -40,7 +41,7 @@ public class GameMechanics {
         this.gameBgColor = color;
         this.rand = new Random();
         ableToShoot = true;
-        playerInPosition = false;
+        playerInPosition = false; // TODO: Remove?
         enemyInPosition = false;
         game();
     }
@@ -94,10 +95,11 @@ public class GameMechanics {
 
         // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
         // change posX to random
-        enemy = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, WINDOW_HEIGHT);
+        // change from -16 to - 32 in posX or change to something else
+        enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
 
         // Animate "the player" as if it's flying in from below
-        ImageView enemySub = new ImageView(PLAYER_IMG);
+        ImageView enemySub = new ImageView(ENEMY1_IMG);
         enemySub.setX(WINDOW_WIDTH / 2 - 32);
         enemySub.setY(100);
         root.getChildren().add(enemySub);
@@ -166,10 +168,15 @@ public class GameMechanics {
         }
 
         // Player
-
         if (playerInPosition) {
             // TODO handle inputs
             player.draw(gc);
+        }
+
+        // Enemies
+        if (enemyInPosition) {
+            // TODO handle inputs
+            enemy.draw(gc);
         }
 
     }
