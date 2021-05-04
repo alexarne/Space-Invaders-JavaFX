@@ -16,12 +16,20 @@ public class Shot extends Sprite {
         this.color = Color.RED;
     }
 
+    /**
+     * Updates the y-position of the bullets
+     */
     public void update() {
         posY -= velocity;
     }
 
+    /**
+     * Draws the bullets.
+     * @param gc The canvas.
+     * @param score The score.
+     */
     public void draw(GraphicsContext gc, int score) {
-        gc.setFill(Color.RED);
+        gc.setFill(Color.ORANGE);
         if (score >=50 && score<=70 || score>=120) {
             gc.setFill(Color.YELLOWGREEN);
             velocity = 50;
