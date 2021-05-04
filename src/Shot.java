@@ -30,6 +30,7 @@ public class Shot extends Sprite {
      */
     public void draw(GraphicsContext gc, int score) {
         gc.setFill(Color.ORANGE);
+        // TODO: Change once we've fixed inventory.
         if (score >= 60 && score <= 80 || score >= 150) {
             upgradeWeapon(gc);
         } else {
