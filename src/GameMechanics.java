@@ -26,6 +26,7 @@ public class GameMechanics {
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
     private boolean playerInPosition;
 
+    // TODO: I keep getting errors about URI not found, need to fix.
     static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
     private boolean enemyInPosition;
     private boolean ableToShoot;
@@ -95,23 +96,23 @@ public class GameMechanics {
         // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
         // change posX to random
         // change from -16 to - 32 in posX or change to something else
-        enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
-
-        // Animate "the player" as if it's flying in from below
-        ImageView enemySub = new ImageView(ENEMY1_IMG);
-        enemySub.setX(WINDOW_WIDTH / 3);
-        enemySub.setY(100);
-        root.getChildren().add(enemySub);
-        TranslateTransition enemyIn = new TranslateTransition();
-        enemyIn.setDuration(Duration.seconds(1.5));
-        enemyIn.setFromY(500);
-        enemyIn.setToY(334);
-        enemyIn.setOnFinished(e -> {
-            enemyInPosition = true;
-            root.getChildren().remove(enemySub);
-        });
-        enemyIn.setNode(enemySub);
-        enemyIn.play();
+//        enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
+//
+//        // Animate the enemy as if it's flying in from above
+//        ImageView enemySub = new ImageView(ENEMY1_IMG);
+//        enemySub.setX(WINDOW_WIDTH / 3);
+//        enemySub.setY(100);
+//        root.getChildren().add(enemySub);
+//        TranslateTransition enemyIn = new TranslateTransition();
+//        enemyIn.setDuration(Duration.seconds(1.5));
+//        enemyIn.setFromY(500);
+//        enemyIn.setToY(334);
+//        enemyIn.setOnFinished(e -> {
+//            enemyInPosition = true;
+//            root.getChildren().remove(enemySub);
+//        });
+//        enemyIn.setNode(enemySub);
+//        enemyIn.play();
 
         stars = new ArrayList<>();
     }
