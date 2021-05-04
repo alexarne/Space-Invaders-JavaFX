@@ -24,21 +24,23 @@ public class GameMechanics {
     private StackPane root;
     private Scene gameScene;
     private Color gameBgColor;
-    private Random rand;
+    private Random rnd;
 
+    // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
     private boolean playerInPosition;
 
-    // Fixing shots
-    private double mouseX;
-    List<Shot> shots = new ArrayList<>();
-    final int MAX_BULLETS = 20;
-    boolean gameOver = false;
-
+    // Enemies
     // TODO: I keep getting errors about URI not found, need to fix.
 //    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
     private boolean enemyInPosition;
     private boolean ableToShoot;
+
+    // Shots
+    private double mouseX;
+    List<Shot> shots = new ArrayList<>();
+    final int MAX_BULLETS = 20;
+    boolean gameOver = false;
 
     private Player player;
     private Enemy enemy;
@@ -93,6 +95,8 @@ public class GameMechanics {
                 // TODO: Fix bug. Cannot shoot when size > max bullets
                 if(shots.size() < MAX_BULLETS) {
                     shots.add(player.shoot());
+                } else {
+                    // set shot.getToRemove() = true;
                 }
             }
         });
@@ -131,6 +135,7 @@ public class GameMechanics {
         playerIn.setNode(playerSub);
         playerIn.play();
 
+        // TODO: Set up enemies
         // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
         // change posX to random
         // change from -16 to - 32 in posX or change to something else
@@ -162,7 +167,6 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-
 //        gc.setFill(Color.RED);
 //        gc.fillOval(100, 100, 200, 100);
 //        gc.fillRect(100, 100, 100, 100);
@@ -171,7 +175,6 @@ public class GameMechanics {
 //        gc.fillRect(100, 600, 10, 10);
 
         // Stars
-
         ArrayList<Star> deadStars = new ArrayList<>();
         Iterator<Star> i = stars.iterator();
         while (i.hasNext()) {

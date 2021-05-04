@@ -52,4 +52,8 @@ public class Shot extends Sprite {
     public static int getSize() {
         return size;
     }
+
+    public boolean getToRemove() {
+        return toRemove;
+    }
 }
