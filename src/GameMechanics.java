@@ -1,6 +1,5 @@
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Scene;
@@ -23,9 +22,12 @@ public class GameMechanics {
     private StackPane root;
     private Scene gameScene;
     private Color gameBgColor;
-    private Random r;
+    private Random rand;
     private boolean playerInPosition;
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
+    static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
+    static final Image ENEMY2_IMG = new Image("Assets/Images/enemy2.png");
+    static final Image ENEMY3_IMG = new Image("Assets/Images/enemy3.png");
 
     private Player player;
     private ArrayList<Star> stars;
@@ -34,7 +36,7 @@ public class GameMechanics {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
-        this.r = new Random();
+        this.rand = new Random();
         game();
     }
 
@@ -132,9 +134,9 @@ public class GameMechanics {
 //            }
 //        }
 
-        if (stars.size() <= 5 && r.nextFloat() < 0.3) {
+        if (stars.size() <= 5 && rand.nextFloat() < 0.3) {
             stars.add(createStar());
-        } else if (stars.size() <= 30 && r.nextFloat() < 0.05) {
+        } else if (stars.size() <= 30 && rand.nextFloat() < 0.05) {
             stars.add(createStar());
         }
 
@@ -152,10 +154,10 @@ public class GameMechanics {
      * @return A randomly generated star, using set bounds.
      */
     public Star createStar() {
-        double distance = r.nextDouble();
-        int height = 4 + r.nextInt(2);
+        double distance = rand.nextDouble();
+        int height = 4 + rand.nextInt(2);
         int width = height;
-        int posX = r.nextInt(WINDOW_WIDTH - width + 1);
+        int posX = rand.nextInt(WINDOW_WIDTH - width + 1);
         double posY = -width;
         double velocity = .6 + distance;
         Color color = Color.grayRgb(20 + 1 + (int) (distance * 100));       // By principle of proximity = stronger light only
