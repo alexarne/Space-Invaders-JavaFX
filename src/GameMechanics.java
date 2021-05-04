@@ -25,9 +25,11 @@ public class GameMechanics {
     private Random rand;
     private boolean playerInPosition;
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
+
     static final Image ENEMY1_IMG = new Image("Assets/Images/enemy1.png");
     static final Image ENEMY2_IMG = new Image("Assets/Images/enemy2.png");
     static final Image ENEMY3_IMG = new Image("Assets/Images/enemy3.png");
+    private boolean ableToShoot;
 
     private Player player;
     private Player enemy;
@@ -38,6 +40,7 @@ public class GameMechanics {
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
         this.rand = new Random();
+        ableToShoot = true;
         game();
     }
 
@@ -73,7 +76,7 @@ public class GameMechanics {
         player = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT - 128, 64, 64, 10, PLAYER_IMG, 100, WINDOW_WIDTH);
 
         // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
-        enemy = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT - 128, 64, 64, 10, PLAYER_IMG, 100, WINDOW_WIDTH);
+        enemy = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT, 64, 64, 10, PLAYER_IMG, 100, WINDOW_HEIGHT);
 
         // Animate "the player" as if it's flying in from below
         ImageView playerSub = new ImageView(PLAYER_IMG);
