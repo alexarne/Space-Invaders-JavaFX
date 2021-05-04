@@ -174,6 +174,7 @@ public class GameMechanics {
             player.draw(gc);
         }
 
+        // Shots
         int score = 0; // when adding collision increase score for each kill
         for (int j = shots.size() - 1; j >=0 ; j--) {
             Shot shot = shots.get(j);
