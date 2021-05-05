@@ -21,6 +21,8 @@ public class Player extends Rocket {
     public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowWidth = windowWidth;
+        this.cooldown = 200;
+        this.cooldownTracker = 0;
     }
 
     /**
@@ -28,7 +30,12 @@ public class Player extends Rocket {
      * @param gc The canvas.
      */
     public void draw(GraphicsContext gc) {
+        update();
         gc.drawImage(img, posX, posY);
+    }
+
+    public void update() {
+        if (cooldownTracker > 0) cooldownTracker -= 7;       // Update frequency
     }
 
     /**
@@ -50,6 +57,29 @@ public class Player extends Rocket {
             this.posX = windowWidth - this.width;
         } else {
             this.posX += velocity;
+        }
+    }
+
+    /**
+     * Lets the player shoot.
+     * @return An array of bullets if allowed, null if still on cooldown.
+     */
+    public Shot[] shoot() {
+        if (cooldownTracker <= 0) {
+            cooldownTracker = cooldown;
+            int amountOfBullets = 1;
+            Shot[] s = new Shot[amountOfBullets];
+            int bulletVelocity = - 4;
+            int h = Shot.size*2;
+            int w = 2;
+            double x = posX + width / 2 - w / 2;
+            double y = posY - h + 6;
+            for (int i = 0; i < amountOfBullets; i++) {
+                s[i] = new Shot(x, y, h, w, bulletVelocity);
+            }
+            return s;
+        } else {
+            return null;
         }
     }
 }

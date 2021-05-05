@@ -8,7 +8,7 @@ public class Shot extends Sprite {
     String origin; // String origin??
     Color color;
     static final int size = 8;
-    public boolean toRemove;
+    boolean cooldown;
 
     /**
      * Constructor.
@@ -28,22 +28,23 @@ public class Shot extends Sprite {
      * Updates the y-position of the bullets
      */
     public void update() {
-        posY -= velocity;
+        posY += velocity;
     }
 
     /**
      * Draws the bullets.
      * @param gc The canvas.
-     * @param score The score.
      */
-    public void draw(GraphicsContext gc, int score) {
+    public void draw(GraphicsContext gc) {
+        update();
         gc.setFill(Color.ORANGE);
+        gc.fillRect(this.posX, this.posY, this.width, this.height);
         // TODO: Change once we've fixed inventory.
-        if (score >= 60 && score <= 80 || score >= 150) {
-            upgradeWeapon(gc);
-        } else {
-            shootNormalBullets(gc);
-        }
+//        if (score >= 60 && score <= 80 || score >= 150) {
+//            upgradeWeapon(gc);
+//        } else {
+//            shootNormalBullets(gc);
+//        }
     }
 
     private void upgradeWeapon(GraphicsContext gc) {
@@ -60,9 +61,5 @@ public class Shot extends Sprite {
 
     public static int getSize() {
         return size;
-    }
-
-    public boolean getToRemove() {
-        return toRemove;
     }
 }

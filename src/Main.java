@@ -139,11 +139,15 @@ public class Main extends Application {
             transitionBackground.setToValue(gameBgColor);
             transitionBackground.setShape(bg);
             transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
-            transitionBackground.setOnFinished(e -> window.setScene(gameScene)); // switches to game scene
             transitionBackground.play();
 
             GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH - 16, WINDOW_HEIGHT - 39, gameBgColor);     // Corrects for misalignment because the window is not actually 600x900 for some reason???
             gameScene = gameMechanics.getGameScene();
+
+            transitionBackground.setOnFinished(e -> {
+                window.setScene(gameScene);
+                gameMechanics.startGame();
+            }); // switches to game scene
         });
     }
 

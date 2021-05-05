@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
  * Enemies travelling towards the player.
  */
 public class Rocket extends Sprite {
-    int explosionStep, health;
+    int explosionStep, health, cooldown, cooldownTracker;
     boolean exploding;
     Image img;
 
@@ -24,16 +24,5 @@ public class Rocket extends Sprite {
         this.health = health;
         this.explosionStep = 0;
         this.exploding = false;
-    }
-
-    /**
-     * Lets the player shoot.
-     * @return bullets.
-     */
-    public Shot shoot() {
-        int bulletVelocity = 2;
-        double xPos = posX + height / 2 - Shot.getSize() / 2;
-        int yPos = (int) posY - Shot.getSize(); // Needs to be converted from double to int
-        return new Shot(xPos, yPos, height, width, bulletVelocity);
     }
 }
