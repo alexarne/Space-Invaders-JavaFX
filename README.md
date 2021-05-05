@@ -9,7 +9,7 @@ The goal is to have a playable, fun, and reasonably complex version of Space Inv
 
 ### How to run the application
 
-The application has been developed using the JavaFX SDK. The IDE we used was IntelliJ and therefore the guides linked will be for IntelliJ, but there are alternatives. This guide is also mostly based off of the official [JavaFX documentation](https://openjfx.io/openjfx-docs/).
+The application has been developed using the JavaFX SDK (version 16, but may work with earlier versions). The IDE we used was IntelliJ and therefore the guides linked will be for IntelliJ, but there are alternatives. This guide is also mostly based off of the official [JavaFX documentation](https://openjfx.io/openjfx-docs/).
 
 1. Install IntelliJ.
 

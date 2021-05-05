@@ -3,11 +3,19 @@
  * Any substantial object which is drawn: Player, Enemies, Bullets, Stars, etc..
  */
 public class Sprite {
-    int posX, height, width;
-    double posY, velocity;
+    int height, width;
+    double posX, posY, velocity;
     boolean dead;
 
-    public Sprite(int posX, double posY, int height, int width, double velocity) {
+    /**
+     * Constructor.
+     * @param posX X-position.
+     * @param posY Y-position.
+     * @param height Height in y-axis.
+     * @param width Width in x-axis.
+     * @param velocity Speed.
+     */
+    public Sprite(double posX, double posY, int height, int width, double velocity) {
         this.posX = posX;
         this.posY = posY;
         this.height = height;
@@ -23,13 +31,13 @@ public class Sprite {
      */
     public boolean hasCollided(Sprite who) {
         // This Sprite's restraints:
-        int xLeft1 = this.posX;
-        int xRight1 = this.posX + this.width;
+        double xLeft1 = this.posX;
+        double xRight1 = this.posX + this.width;
         double yUp1 = this.posY;
         double yDown1 = this.posY + this.height;
         // The other sprite's restraints:
-        int xLeft2 = who.posX;
-        int xRight2 = who.posX + who.width;
+        double xLeft2 = who.posX;
+        double xRight2 = who.posX + who.width;
         double yUp2 = who.posY;
         double yDown2 = who.posY + who.height;
 
