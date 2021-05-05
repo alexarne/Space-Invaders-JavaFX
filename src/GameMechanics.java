@@ -38,13 +38,20 @@ public class GameMechanics {
     boolean gameOver = false;
 
     // Enemies
-    private Enemy[] enemies;
+    private Enemy[] enemiesLoad;
+    private int amountOfEnemies;
+    private int enemiesLoaded;
+    private double spawnProbability;
 
     private Player player;
     private Enemy enemy;
 
     private LinkedList<Star> stars;
+    private LinkedList<Star> deadStars;
     private LinkedList<Shot> shots;
+    private LinkedList<Shot> deadShots;
+    private LinkedList<Enemy> enemies;
+    private LinkedList<Enemy> deadEnemies;
 
     public GameMechanics(int width, int height, Color color) {
         this.WINDOW_WIDTH = width;
@@ -52,7 +59,12 @@ public class GameMechanics {
         this.gameBgColor = color;
         this.rnd = new Random();
         playerInPosition = false;
-        game();
+        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
+        gc = canvas.getGraphicsContext2D();
+        root = new StackPane(canvas);
+        gameScene = new Scene(root);
+        gc.setFill(gameBgColor);
+        gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     /**
@@ -66,14 +78,7 @@ public class GameMechanics {
     /**
      * Start the game.
      */
-    public void game() {
-        Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-        root = new StackPane(canvas);
-        gameScene = new Scene(root);
-        gc.setFill(gameBgColor);
-        gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
+    public void load() {
         playerMoveLeft = false;
         playerMoveRight = false;
         playerShoot = false;
@@ -113,17 +118,17 @@ public class GameMechanics {
      */
     public void gameSetup() {
         // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
-        player = new Player(WINDOW_WIDTH / 2 - 32, WINDOW_HEIGHT - 128, 64, 64, 2, PLAYER_IMG, 100, WINDOW_WIDTH);
+        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH);
 
         // Animate "the player" as if it's flying in from below
         ImageView playerSub = new ImageView(PLAYER_IMG);
-        playerSub.setX(WINDOW_WIDTH / 2 - 32);
+        playerSub.setX(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2);
         playerSub.setY(100);
         root.getChildren().add(playerSub);
         TranslateTransition playerIn = new TranslateTransition();
         playerIn.setDuration(Duration.seconds(1.5));
         playerIn.setFromY(500);
-        playerIn.setToY(334);
+        playerIn.setToY(340);
         playerIn.setOnFinished(e -> {
             playerInPosition = true;
             root.getChildren().remove(playerSub);
@@ -132,12 +137,32 @@ public class GameMechanics {
         playerIn.play();
 
         // TODO: Setup enemies
-        // Enemy(int posX, int posY, int height, int width, int velocity, Image img, int health, boolean ableToShoot, int windowHeight)
+        // Enemy(double posX, double posY, int height, int width, double velocity, Image img, int health, boolean ableToShoot)
         // enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
 
+        // Load enemies according to level: //TODO
+        amountOfEnemies = 10;
+        enemiesLoad = new Enemy[amountOfEnemies];
+        for (int i = 0; i < amountOfEnemies; i++) {
+            // Read text file and assign values accordingly //TODO
+            int n = 1 + rnd.nextInt(3);
+            Image img = new Image("Assets/Images/enemyrocket" + n + ".png");
+            double x = rnd.nextInt(WINDOW_WIDTH - (int) img.getWidth());
+            double y = - (int) img.getHeight();
+            double v = 1;
+            int hp = 100;
+            boolean s = true;
+            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s);
+        }
+        spawnProbability = 0.003;
+        enemiesLoaded = 0;
 
         stars = new LinkedList<>();
+        deadStars = new LinkedList<>();
         shots = new LinkedList<>();
+        deadShots = new LinkedList<>();
+        enemies = new LinkedList<>();
+        deadEnemies = new LinkedList<>();
     }
 
     /**
@@ -175,32 +200,38 @@ public class GameMechanics {
             player.draw(gc);
         }
 
+        // Enemies
+        renderEnemies();
+        // Spawn next Enemy randomly if not all spawned already
+        if (enemiesLoaded < amountOfEnemies && playerInPosition) {
+            if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
+                enemies.add(enemiesLoad[enemiesLoaded]);
+                enemiesLoaded++;
+            }
+        }
 
-//        // Shots
-//        LinkedList<Shot> deadShots = new LinkedList<>();
-//        for (Shot shot : shots) {
-//            if (isOutsideScreen(shot)) {
-//                deadShots.add(shot);
-//                continue;
-//            }
-//            shot.draw(gc);
-//        }
+        // Collisions and dead marking
+        for (Shot shot : shots) {
+            for (Enemy enemy : enemies) {
+                if (enemy.dead) {
+                    deadEnemies.add(enemy);
+                    continue;
+                }
+                if (shot.hasCollided(enemy) && !enemy.exploding) {
+                    enemy.explode();
+                    deadShots.add(shot);
+                }
+            }
+        }
 
-//        // Shots
-//        int score = 0; // when adding collision increase score for each kill
-//        for (int j = shots.size() - 1; j >= 0 ; j--) {
-//            Shot shot = shots.get(j);
-//            if(shot.posY < 0 || shot.dead)  {
-//                shots.remove(j);
-//                continue;
-//            }
-//            shot.update();
-//            shot.draw(gc, score);
-//        }
+        System.out.println(enemies.size());
+
+        // Remove all dead
+        removeDead();
+
     }
 
     private void renderStars() {
-        LinkedList<Star> deadStars = new LinkedList<>();
         for (Star star : stars) {
             if (isOutsideScreen(star)) {
                 deadStars.add(star);
@@ -208,14 +239,9 @@ public class GameMechanics {
                 star.draw(gc);
             }
         }
-        // Remove dead stars
-        for (Star deadStar : deadStars) {
-            stars.remove(deadStar);
-        }
     }
 
     private void renderShots() {
-        LinkedList<Shot> deadShots = new LinkedList<>();
         for (Shot shot : shots) {
             if (isOutsideScreen(shot)) {
                 deadShots.add(shot);
@@ -223,10 +249,34 @@ public class GameMechanics {
                 shot.draw(gc);
             }
         }
+    }
+
+    private void renderEnemies() {
+        for (Enemy enemy : enemies) {
+            if (isOutsideScreen(enemy)) {
+                deadEnemies.add(enemy);
+            } else {
+                enemy.draw(gc);
+            }
+        }
+    }
+
+    private void removeDead() {
+        // Remove dead stars
+        for (Star deadStar : deadStars) {
+            stars.remove(deadStar);
+        }
         // Remove dead shots
         for (Shot deadShot : deadShots) {
             shots.remove(deadShot);
         }
+        // Remove dead enemies
+        for (Enemy deadEnemy : deadEnemies) {
+            enemies.remove(deadEnemy);
+        }
+        deadStars.clear();
+        deadShots.clear();
+        deadEnemies.clear();
     }
 
     private boolean isOutsideScreen(Sprite who) {
