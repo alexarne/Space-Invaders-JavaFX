@@ -34,6 +34,9 @@ public class Player extends Rocket {
         gc.drawImage(img, posX, posY);
     }
 
+    /**
+     * Updates the Player.
+     */
     public void update() {
         if (cooldownTracker > 0) cooldownTracker -= 7;       // Update frequency
     }
