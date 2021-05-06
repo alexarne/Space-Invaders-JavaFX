@@ -30,8 +30,12 @@ public class Player extends Rocket {
      * @param gc The canvas.
      */
     public void draw(GraphicsContext gc) {
-        update();
-        gc.drawImage(img, posX, posY);
+        if (exploding) {
+            this.drawExplode(gc);
+        } else {
+            update();
+            gc.drawImage(img, posX, posY);
+        }
     }
 
     /**

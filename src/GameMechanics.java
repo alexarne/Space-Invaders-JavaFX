@@ -26,7 +26,6 @@ public class GameMechanics {
     private boolean playerMoveLeft;
     private boolean playerMoveRight;
     private boolean playerShoot;
-    private boolean playerShootChecked;
 
     // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
@@ -44,7 +43,6 @@ public class GameMechanics {
     private double spawnProbability;
 
     private Player player;
-    private Enemy enemy;
 
     private LinkedList<Star> stars;
     private LinkedList<Star> deadStars;
@@ -52,6 +50,8 @@ public class GameMechanics {
     private LinkedList<Shot> deadShots;
     private LinkedList<Enemy> enemies;
     private LinkedList<Enemy> deadEnemies;
+    private LinkedList<Enemy> explosions;
+    private LinkedList<Enemy> deadExplosions;
 
     public GameMechanics(int width, int height, Color color) {
         this.WINDOW_WIDTH = width;
@@ -82,7 +82,6 @@ public class GameMechanics {
         playerMoveLeft = false;
         playerMoveRight = false;
         playerShoot = false;
-        playerShootChecked = true;
         handleUserInputs();
 
         gameSetup();
@@ -141,7 +140,7 @@ public class GameMechanics {
         // enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
 
         // Load enemies according to level: //TODO
-        amountOfEnemies = 10;
+        amountOfEnemies = 20;
         enemiesLoad = new Enemy[amountOfEnemies];
         for (int i = 0; i < amountOfEnemies; i++) {
             // Read text file and assign values accordingly //TODO
@@ -152,9 +151,10 @@ public class GameMechanics {
             double v = 1;
             int hp = 100;
             boolean s = true;
-            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s);
+            boolean b = false;
+            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s, b);
         }
-        spawnProbability = 0.003;
+        spawnProbability = 0.01;
         enemiesLoaded = 0;
 
         stars = new LinkedList<>();
@@ -163,6 +163,8 @@ public class GameMechanics {
         deadShots = new LinkedList<>();
         enemies = new LinkedList<>();
         deadEnemies = new LinkedList<>();
+        explosions = new LinkedList<>();
+        deadExplosions = new LinkedList<>();
     }
 
     /**
@@ -185,7 +187,7 @@ public class GameMechanics {
         renderShots();
 
         // Player
-        if (playerInPosition) {
+        if (playerInPosition && !player.exploding) {
             // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
             if (playerMoveRight) player.moveRight();
@@ -205,26 +207,43 @@ public class GameMechanics {
         // Spawn next Enemy randomly if not all spawned already
         if (enemiesLoaded < amountOfEnemies && playerInPosition) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
-                enemies.add(enemiesLoad[enemiesLoaded]);
-                enemiesLoaded++;
+                Enemy currentEnemy = enemiesLoad[enemiesLoaded];
+                // TODO clever spawning? this is just a lazy fix
+                boolean flag = false;
+                for (Enemy spawnedEnemy : enemies) {
+                    if (spawnedEnemy.hasCollided(currentEnemy)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    enemies.add(enemiesLoad[enemiesLoaded]);
+                    enemiesLoaded++;
+                }
             }
         }
 
         // Collisions and dead marking
-        for (Shot shot : shots) {
-            for (Enemy enemy : enemies) {
-                if (enemy.dead) {
-                    deadEnemies.add(enemy);
-                    continue;
-                }
-                if (shot.hasCollided(enemy) && !enemy.exploding) {
+        for (Enemy enemy : enemies) {
+            if (player.hasCollided(enemy) && !player.exploding) {
+                player.explode();
+                enemy.explode();
+                explosions.add(enemy);
+                deadEnemies.add(enemy);
+                continue;
+            }
+            for (Shot shot : shots) {
+                if (shot.hasCollided(enemy)) {
                     enemy.explode();
+                    explosions.add(enemy);
+                    deadEnemies.add(enemy);
                     deadShots.add(shot);
                 }
             }
         }
 
-        System.out.println(enemies.size());
+        // Render explosions
+        renderExplosions();
 
         // Remove all dead
         removeDead();
@@ -261,6 +280,19 @@ public class GameMechanics {
         }
     }
 
+    private void renderExplosions() {
+        for (Enemy explosion : explosions) {
+            if (explosion.dead) {
+                deadExplosions.add(explosion);
+            } else {
+                explosion.draw(gc);
+            }
+        }
+        if (player.exploding) {
+            player.draw(gc);
+        }
+    }
+
     private void removeDead() {
         // Remove dead stars
         for (Star deadStar : deadStars) {
@@ -273,6 +305,10 @@ public class GameMechanics {
         // Remove dead enemies
         for (Enemy deadEnemy : deadEnemies) {
             enemies.remove(deadEnemy);
+        }
+        // Remove dead explosions
+        for (Enemy deadExplosion : deadExplosions) {
+            explosions.remove(deadExplosion);
         }
         deadStars.clear();
         deadShots.clear();

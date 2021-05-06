@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
  * Enemies travelling towards the player.
  */
 public class Enemy extends Rocket {
-    boolean ableToShoot;
+    boolean ableToShoot, boss;
 
     /**
      * Constructor.
@@ -14,9 +14,10 @@ public class Enemy extends Rocket {
      * @param velocity Speed.
      * @param img Image.
      * @param health Health.
-     * @param ableToShoot Boolean that controls whether the enemy can shoot or not.
+     * @param ableToShoot Is able to shoot or not.
+     * @param boss Is boss or not.
      */
-    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot) {
+    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot, boolean boss) {
         super(posX, posY, (int) img.getHeight(), (int) img.getWidth(), velocity, img, health);
         this.ableToShoot = ableToShoot;
     }
