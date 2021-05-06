@@ -57,8 +57,6 @@ public class GameMechanics {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
-        this.rnd = new Random();
-        playerInPosition = false;
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         root = new StackPane(canvas);
@@ -79,6 +77,9 @@ public class GameMechanics {
      * Start the game.
      */
     public void load() {
+        this.rnd = new Random();
+        playerInPosition = false;
+
         playerMoveLeft = false;
         playerMoveRight = false;
         playerShoot = false;
@@ -113,31 +114,31 @@ public class GameMechanics {
     }
 
     /**
-     * Initialize everything that has to be initialized for the game to begin.
+     * Animate "the player" as if it's flying in from below
      */
-    public void gameSetup() {
-        // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
-        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH);
-
-        // Animate "the player" as if it's flying in from below
+    public void animatePlayerIn() {
         ImageView playerSub = new ImageView(PLAYER_IMG);
         playerSub.setX(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2);
-        playerSub.setY(100);
-        root.getChildren().add(playerSub);
+        playerSub.setY(500);
         TranslateTransition playerIn = new TranslateTransition();
         playerIn.setDuration(Duration.seconds(1.5));
-        playerIn.setFromY(500);
-        playerIn.setToY(340);
+        playerIn.setFromY(550);
+        playerIn.setToY(360);
         playerIn.setOnFinished(e -> {
             playerInPosition = true;
             root.getChildren().remove(playerSub);
         });
         playerIn.setNode(playerSub);
         playerIn.play();
+        root.getChildren().add(playerSub);
+    }
 
-        // TODO: Setup enemies
-        // Enemy(double posX, double posY, int height, int width, double velocity, Image img, int health, boolean ableToShoot)
-        // enemy = new Enemy(WINDOW_WIDTH / 2 - 16, WINDOW_HEIGHT, 64, 64, 10, ENEMY1_IMG, 100, ableToShoot, WINDOW_HEIGHT);
+    /**
+     * Initialize everything that has to be initialized for the game to begin.
+     */
+    public void gameSetup() {
+        // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
+        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH);
 
         // Load enemies according to level: //TODO
         amountOfEnemies = 20;

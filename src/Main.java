@@ -37,6 +37,7 @@ public class Main extends Application {
         window.setHeight(WINDOW_HEIGHT);
         window.setWidth(WINDOW_WIDTH);
         window.setResizable(false);
+        window.sizeToScene();
 
         mainMenu();
 
@@ -74,6 +75,7 @@ public class Main extends Application {
         // Configure animations
         Duration animationDuration = Duration.millis(300);
         Interpolator interp = Interpolator.EASE_OUT;
+
         handleStartGame(bg, menuText, startGame, textArr, animationDuration, interp);
         handleHighscore(highscore, textArr, animationDuration, interp);
         handleInventory(inventory, textArr, animationDuration, interp);
@@ -133,22 +135,21 @@ public class Main extends Application {
             }
             transitionFade(menuText, animationDuration, interp);
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH - 16, WINDOW_HEIGHT - 39, gameBgColor);     // Corrects for misalignment because the window is not actually 600x900 for some reason???
-
-            // Animate the background
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, gameBgColor);
             FillTransition transitionBackground = new FillTransition();
             transitionBackground.setDuration(Duration.millis(300));
             transitionBackground.setToValue(gameBgColor);
             transitionBackground.setShape(bg);
             transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
             transitionBackground.setOnFinished(e -> {
+                gameMechanics.load();
                 gameScene = gameMechanics.getGameScene();
                 window.setScene(gameScene);
                 gameMechanics.startGame();
             }); // switches to game scene
             transitionBackground.play();
 
-            gameMechanics.load();
+            gameMechanics.animatePlayerIn();
         });
     }
 
