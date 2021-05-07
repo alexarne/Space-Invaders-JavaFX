@@ -1,11 +1,13 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * The player.
  */
 public class Player extends Rocket {
-    int windowWidth, score, scoreAmplifier;
+    int windowWidth, score, scoreAmplifier, ammunitionMax, ammunitionCurrent, reloadTimeMax, reloadTimeCurrent;
+    boolean reloading;
     String origin;
 
     /**
@@ -19,11 +21,16 @@ public class Player extends Rocket {
      * @param health Health.
      * @param windowWidth The screens width.
      */
-    public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth, int scoreAmplifier) {
-        super(posX, posY, height, width, velocity, img, health);
+    public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth, int scoreAmplifier, int damage) {
+        super(posX, posY, height, width, velocity, img, health, damage);
         this.windowWidth = windowWidth;
         this.cooldown = 200;
         this.cooldownTracker = 0;
+        this.ammunitionMax = 10;
+        this.ammunitionCurrent = 10;
+        this.reloadTimeMax = 215*7;
+        this.reloadTimeCurrent = 0;
+        this.reloading = false;
         this.origin = "player";
         this.score = 0;
         this.scoreAmplifier = scoreAmplifier;
@@ -62,6 +69,13 @@ public class Player extends Rocket {
      */
     public void update() {
         if (cooldownTracker > 0) cooldownTracker -= 7;       // Update frequency
+        if (reloading) {
+            reloadTimeCurrent -= 7;
+            if (reloadTimeCurrent <= 0) {
+                reloading = false;
+                ammunitionCurrent = ammunitionMax;
+            }
+        }
     }
 
     /**
@@ -91,8 +105,14 @@ public class Player extends Rocket {
      * @return An array of bullets if allowed, null if still on cooldown.
      */
     public Shot[] shoot() {
-        if (cooldownTracker <= 0) {
+        if (cooldownTracker <= 0 && ammunitionCurrent > 0) {
             cooldownTracker = cooldown;
+            ammunitionCurrent--;
+            if (ammunitionCurrent <= 0) {
+                reloading = true;
+                reloadTimeCurrent = reloadTimeMax;
+            }
+
             int amountOfBullets = 1;
             Shot[] s = new Shot[amountOfBullets];
             int bulletVelocity = - 4;
@@ -101,7 +121,7 @@ public class Player extends Rocket {
             double x = posX + width / 2 - w / 2;
             double y = posY - h + 6;
             for (int i = 0; i < amountOfBullets; i++) {
-                s[i] = new Shot(x, y, h, w, bulletVelocity, origin);
+                s[i] = new Shot(x, y, origin, h, w, bulletVelocity, damage);
             }
             return s;
         } else {

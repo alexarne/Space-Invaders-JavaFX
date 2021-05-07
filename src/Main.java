@@ -108,7 +108,7 @@ public class Main extends Application {
         label.setText(s);
         label.setFill(Color.BLACK);
         label.setFont(Font.font("Sitka Small", fontSize));
-        label.setX((window.getWidth()-16) / 2 - label.getLayoutBounds().getWidth() / 2);
+        label.setX(WINDOW_WIDTH / 2 - label.getLayoutBounds().getWidth() / 2);
         label.setY(posY);
         return label;
     }
