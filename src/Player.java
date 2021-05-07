@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
  */
 public class Player extends Rocket {
     int windowWidth;
+    String origin;
 
     /**
      * Constructor.
@@ -23,6 +24,7 @@ public class Player extends Rocket {
         this.windowWidth = windowWidth;
         this.cooldown = 200;
         this.cooldownTracker = 0;
+        this.origin = "player";
     }
 
     /**
@@ -77,16 +79,29 @@ public class Player extends Rocket {
             int amountOfBullets = 1;
             Shot[] s = new Shot[amountOfBullets];
             int bulletVelocity = - 4;
-            int h = Shot.size*2;
+            int h = 16;
             int w = 2;
             double x = posX + width / 2 - w / 2;
             double y = posY - h + 6;
             for (int i = 0; i < amountOfBullets; i++) {
-                s[i] = new Shot(x, y, h, w, bulletVelocity);
+                s[i] = new Shot(x, y, h, w, bulletVelocity, origin);
             }
             return s;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * What to do when the player is damaged.
+     * In this case the player image flashes red.
+     */
+    public void hit(Shot shot) {
+        if (health - shot.damage > 0) {
+            health -= shot.damage;
+        } else {
+            health = 0;
+            explode();
         }
     }
 }
