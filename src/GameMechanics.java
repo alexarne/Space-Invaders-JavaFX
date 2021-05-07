@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
 
@@ -28,6 +30,8 @@ public class GameMechanics {
 
     // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
+    static final Image HP_IMG = new Image("Assets/Images/hp_icon.png");
+    static final Image AMMO_IMG = new Image("Assets/Images/ammo_icon.png");
     private boolean playerInPosition;
 
     // Shots
@@ -414,30 +418,42 @@ public class GameMechanics {
 
     private void renderHP() {
         gc.setFill(hpColor);
-        gc.fillRect(10, WINDOW_HEIGHT-2*10-2*1, 150+2*1, 10+2*1);
+        gc.fillRect(10, WINDOW_HEIGHT-22, 152, 12);
 
         gc.setFill(gameBgColor);
-        gc.fillRect(10 + 1, WINDOW_HEIGHT-2*10-2*1 + 1, 150, 10);
+        gc.fillRect(11, WINDOW_HEIGHT-21, 150, 10);
 
         gc.setFill(hpColor);
-        gc.fillRect(10 + 1, WINDOW_HEIGHT-2*10-2*1 + 1, (150)*player.health/100, 10);
+        gc.fillRect(11, WINDOW_HEIGHT-21, 150*player.health/100, 10);
+
+        // HP icon
+        gc.drawImage(HP_IMG, 10, WINDOW_HEIGHT-43);
+        gc.setFont(Font.font("Verdana", 17.5));
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText(String.valueOf(player.health), 29, WINDOW_HEIGHT-29);
     }
 
     private void renderAmmo() {
         gc.setFill(ammoColor);
-        gc.fillRect(WINDOW_WIDTH-10-150+2*1 - 4, WINDOW_HEIGHT-2*10-2*1, 150+2*1, 10+2*1);
+        gc.fillRect(WINDOW_WIDTH-162, WINDOW_HEIGHT-22, 152, 12);
 
         gc.setFill(gameBgColor);
-        gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4, WINDOW_HEIGHT-2*10-2*1 + 1, 150, 10);
+        gc.fillRect(WINDOW_WIDTH-161, WINDOW_HEIGHT-21, 150, 10);
 
         gc.setFill(ammoColor);
         if (player.reloading) {
             gc.setGlobalAlpha(0.3);
-            gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4 + 150 - 150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, WINDOW_HEIGHT-2*10-2*1 + 1, 150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, 10);
+            gc.fillRect(WINDOW_WIDTH-11-150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, WINDOW_HEIGHT-21, 150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, 10);
             gc.setGlobalAlpha(1);
         } else {
-            gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4 + 150 - 150*player.ammunitionCurrent/player.ammunitionMax, WINDOW_HEIGHT-2*10-2*1 + 1, 150*player.ammunitionCurrent/player.ammunitionMax, 10);
+            gc.fillRect(WINDOW_WIDTH-11-150*player.ammunitionCurrent/player.ammunitionMax, WINDOW_HEIGHT-21, 150*player.ammunitionCurrent/player.ammunitionMax, 10);
         }
+
+        // Ammo icon
+        gc.drawImage(AMMO_IMG, WINDOW_WIDTH-25, WINDOW_HEIGHT-43);
+        gc.setFont(Font.font("Verdana", 17.5));
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.fillText(String.valueOf(player.ammunitionCurrent) + "/" + String.valueOf(player.ammunitionMax), WINDOW_WIDTH-29, WINDOW_HEIGHT-29);
     }
 
     private boolean isOutsideScreen(Sprite who) {
