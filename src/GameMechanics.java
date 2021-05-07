@@ -201,7 +201,62 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        // Calculate FPS
+        showPlayerScoreDuringGameplay();
+        showAmountOfEnemiesLeft(); // see the methods comment below
+
+        calculateFPS();
+
+        // Stars
+        renderStars();
+        addNewStars();
+
+        // Player
+        handlePlayerMovementAndShooting();
+
+        // Shots
+        renderShots();
+
+        // Enemy shooting
+        for (Enemy enemy : enemies) { // TODO: Too much happening, hard to clean the code. Should be three methods.
+            handleEnemyShooting(enemy);
+            if (playerAndEnemyCollide(enemy)) continue;
+            checkIfPlayerBulletHitsEnemy(enemy);
+        }
+
+        // Enemies
+        renderEnemies();
+        handleEnemySpawning();
+        checkIfEnemyBulletHitsPLayer();
+
+        renderExplosions();
+        removeDead();
+
+        // Game state
+        handleGameOverIfPlayerDead();
+        handleGameWonIfAllEnemiesDead();
+      
+        renderHUD();
+
+        // TODO check if player score is worthy of an achievement
+    }
+
+    private void showPlayerScoreDuringGameplay() {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    // TODO: Implement idea or discard it.
+    private void showAmountOfEnemiesLeft() {
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        int amountLeft = 0;
+        gc.fillText("Enemies left: " + amountLeft, 500,  20);
+    }
+
+    private void calculateFPS() {
         if (stopwatch.isRunning()) {
             long time = stopwatch.nanoseconds();
             fpsArr.add(time);
@@ -217,17 +272,17 @@ public class GameMechanics {
             stopwatch.reset();
         }
         stopwatch.start();
+    }
 
-        // Stars
-        renderStars();
-        // Add new stars
+    private void addNewStars() {
         if (stars.size() <= 5 && rnd.nextFloat() < 0.3) {
             stars.add(createStar());
         } else if (stars.size() <= 30 && rnd.nextFloat() < 0.05) {
             stars.add(createStar());
         }
+    }
 
-        // Player
+    private void handlePlayerMovementAndShooting() {
         if (playerInPosition && !player.exploding) {
             // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
@@ -242,47 +297,48 @@ public class GameMechanics {
             }
             player.draw(gc);
         }
+    }
 
-        // Shots
-        renderShots();
-        // Enemy shooting
-        for (Enemy enemy : enemies) {
-            if (enemy.ableToShoot) {
-                if (rnd.nextDouble() < enemy.shootingProbability) {
-                    Shot[] s = enemy.shoot();
-                    if (s != null) {
-                        for (Shot shot : s) {
-                            enemyShots.add(shot);
-                        }
-                    }
-                }
-            }
-            // Check player-enemy collisions
-            if (player.hasCollided(enemy) && !player.exploding) {
-                player.explode();
-                enemy.explode();
-                player.health = 0;
-                explosions.add(enemy);
-                deadEnemies.add(enemy);
-                continue;
-            }
-            // Check if player bullet hits enemy
-            for (Shot shot : playerShots) {
-                if (shot.hasCollided(enemy)) {
-                    enemy.hit(shot);
-                    playerDeadShots.add(shot);
-                    if (enemy.health == 0) {
-                        explosions.add(enemy);
-                        deadEnemies.add(enemy);
+    private void handleEnemyShooting(Enemy enemy) {
+        if (enemy.ableToShoot) {
+            if (rnd.nextDouble() < enemy.shootingProbability) {
+                Shot[] s = enemy.shoot();
+                if (s != null) {
+                    for (Shot shot : s) {
+                        enemyShots.add(shot);
                     }
                 }
             }
         }
+    }
 
-        // Enemies
-        renderEnemies();
-        // Spawn next Enemy randomly if not all spawned already and if player is alive
-        if (enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding) {
+    private boolean playerAndEnemyCollide(Enemy enemy) {
+        if (player.hasCollided(enemy) && !player.exploding) {
+            player.explode();
+            enemy.explode();
+            explosions.add(enemy);
+            deadEnemies.add(enemy);
+            return true;
+        }
+        return false;
+    }
+
+    private void checkIfPlayerBulletHitsEnemy(Enemy enemy) {
+        for (Shot shot : playerShots) {
+            if (shot.hasCollided(enemy)) {
+                enemy.hit(shot);
+                playerDeadShots.add(shot);
+                if (enemy.health == 0) {
+                    explosions.add(enemy);
+                    deadEnemies.add(enemy);
+                    player.updateScore();
+                }
+            }
+        }
+    }
+
+    private void handleEnemySpawning() {
+        if (thereAreEnemiesToLoadAndPlayerIsAlive()) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
                 // TODO clever spawning? this is just a lazy fix
@@ -299,8 +355,13 @@ public class GameMechanics {
                 }
             }
         }
+    }
 
-        // Check if enemy bullet hits player
+    private boolean thereAreEnemiesToLoadAndPlayerIsAlive() {
+        return enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding;
+    }
+
+    private void checkIfEnemyBulletHitsPLayer() {
         if (!player.exploding) {
             for (Shot shot : enemyShots) {
                 if (player.hasCollided(shot)) {
@@ -309,30 +370,31 @@ public class GameMechanics {
                 }
             }
         }
+    }
 
-        // Render explosions
-        renderExplosions();
-
-        // Remove all dead
-        removeDead();
-
-        // Check if player is dead; game over
+    private void handleGameOverIfPlayerDead() {
         if (player.dead) {
-            gc.setFill(Color.GREEN);
-            gc.fillRect(200, 200, 100, 150);
+            gc.setFont(Font.font(30));
+            gc.setFill(Color.RED);
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n\n Click here to play again",
+                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
-        // Check if all enemies are dead; game won
-        if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
-            System.out.println("game won");
-        } else {
+    }
 
+    private void handleGameWonIfAllEnemiesDead() {
+        // TODO: Make it so that the text "Click here" leads to a new level.
+        if (allEnemiesLoadedAndAllAreDead()) {
+            gc.setFont(Font.font(30));
+            gc.setFill(Color.RED);
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("The Enemies Have Been Destroyed!" + " \n\n Click here to play the next level",
+                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
+    }
 
-        renderHUD();
-
-        // TODO check if player score is worthy of an achievement
-
-
+    private boolean allEnemiesLoadedAndAllAreDead() {
+        return enemiesLoaded == enemiesLoad.length && enemies.size() == 0 && explosions.size() == 0;
     }
 
     private void renderStars() {
@@ -386,29 +448,45 @@ public class GameMechanics {
     }
 
     private void removeDead() {
-        // Remove dead stars
-        for (Star deadStar : deadStars) {
-            stars.remove(deadStar);
-        }
-        // Remove dead shots
-        for (Shot deadShot : playerDeadShots) {
-            playerShots.remove(deadShot);
-        }
-        // Remove dead shots
-        for (Shot deadShot : enemyDeadShots) {
-            enemyShots.remove(deadShot);
-        }
-        // Remove dead enemies
-        for (Enemy deadEnemy : deadEnemies) {
-            enemies.remove(deadEnemy);
-        }
-        // Remove dead explosions
-        for (Enemy deadExplosion : deadExplosions) {
-            explosions.remove(deadExplosion);
-        }
+        removeDeadStars();
+        removePlayerDeadShots(playerDeadShots, playerShots);
+        removeEnemyDeadShots(enemyDeadShots, enemyShots);
+        removeDeadEnemies(deadEnemies, enemies);
+        removeDeadExplosions(deadExplosions, explosions);
+
         deadStars.clear();
         playerDeadShots.clear();
         deadEnemies.clear();
+    }
+
+    private void removeDeadStars() {
+        for (Star deadStar : deadStars) {
+            stars.remove(deadStar);
+        }
+    }
+
+    private void removePlayerDeadShots(LinkedList<Shot> playerDeadShots, LinkedList<Shot> playerShots) {
+        for (Shot deadShot : playerDeadShots) {
+            playerShots.remove(deadShot);
+        }
+    }
+
+    private void removeEnemyDeadShots(LinkedList<Shot> enemyDeadShots, LinkedList<Shot> enemyShots) {
+        for (Shot deadShot : enemyDeadShots) {
+            enemyShots.remove(deadShot);
+        }
+    }
+
+    private void removeDeadEnemies(LinkedList<Enemy> deadEnemies, LinkedList<Enemy> enemies) {
+        for (Enemy deadEnemy : deadEnemies) {
+            enemies.remove(deadEnemy);
+        }
+    }
+
+    private void removeDeadExplosions(LinkedList<Enemy> deadExplosions, LinkedList<Enemy> explosions) {
+        for (Enemy deadExplosion : deadExplosions) {
+            explosions.remove(deadExplosion);
+        }
     }
 
     private void renderHUD() {
