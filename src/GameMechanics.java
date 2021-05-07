@@ -1,7 +1,6 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -314,20 +313,17 @@ public class GameMechanics {
             gc.setFont(Font.font(30));
             gc.setFill(Color.RED);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n Click to play again",
+            gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n\n Click here to play again",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
 
         // TODO: Check if all enemies are dead; game won
-        if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
+        if (allEnemiesLoadedAndAllAreDead()) {
             gc.setFont(Font.font(30));
             gc.setFill(Color.RED);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("The Enemies Have Been Destroyed" + " \n Click to play the next level",
+            gc.fillText("The Enemies Have Been Destroyed!" + " \n\n Click here to play the next level",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
-        } else {
-            System.out.println(enemies.size());
-
         }
 
         // TODO check if player score is worthy of an achievement
@@ -340,6 +336,10 @@ public class GameMechanics {
         gc.setFont(Font.font(20));
         gc.setFill(Color.YELLOW);
         gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    private boolean allEnemiesLoadedAndAllAreDead() {
+        return enemiesLoaded == enemiesLoad.length && enemies.size() == 0;
     }
 
     private void renderStars() {
