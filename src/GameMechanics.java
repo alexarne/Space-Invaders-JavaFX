@@ -201,7 +201,7 @@ public class GameMechanics {
         addNewStars();
 
         // Player
-        handlePlayerMechanics();
+        handlePlayerMovementAndShooting();
 
         // Shots
         renderShots();
@@ -254,7 +254,7 @@ public class GameMechanics {
         }
     }
 
-    private void handlePlayerMechanics() {
+    private void handlePlayerMovementAndShooting() {
         if (playerInPosition && !player.exploding) {
             // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
