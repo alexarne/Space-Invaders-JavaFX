@@ -17,11 +17,11 @@ public class Shot extends Sprite {
      * @param width Width in x-axis.
      * @param velocity Speed.
      */
-    public Shot(double posX, double posY, int height, int width, double velocity, String origin) {
+    public Shot(double posX, double posY, String origin, int height, int width, double velocity, int damage) {
         super(posX, posY, height, width, velocity);
         this.origin = origin;
         this.color = Color.RED;
-        this.damage = 100;
+        this.damage = damage;
     }
 
     /**
