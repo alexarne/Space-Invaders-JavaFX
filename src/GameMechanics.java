@@ -192,9 +192,8 @@ public class GameMechanics {
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         showPlayerScoreDuringGameplay();
-        showAmountOfEnemiesLeft();
+        showAmountOfEnemiesLeft(); // see the methods comment below
 
-        // Calculate FPS
         calculateFPS();
 
         // Stars
@@ -208,9 +207,9 @@ public class GameMechanics {
         renderShots();
 
         // Enemies
+
         // Enemy shooting
-        // TODO: Gillar inte att så mycket händer i den här for-loopen,renare kod om det hade kunnat delats upp i 3 metoder
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies) { // TODO: Too much happening, hard to clean the code. Should be three methods.
             handleEnemyShooting(enemy);
             if (playerAndEnemyCollide(enemy)) continue;
             checkIfPlayerBulletHitsEnemy(enemy);
@@ -371,6 +370,7 @@ public class GameMechanics {
         gc.fillText("Score: " + player.getScore(), 10,  20);
     }
 
+    // TODO: Implement idea or discard it.
     private void showAmountOfEnemiesLeft() {
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.setFont(Font.font(20));
