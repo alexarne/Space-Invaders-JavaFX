@@ -272,9 +272,24 @@ public class GameMechanics {
             }
         }
 
-        // Enemies
         renderEnemies();
         // Spawn next Enemy randomly if not all spawned already and if player is alive
+        handleEnemySpawning();
+
+        checkIfEnemyBulletHitsPLayer();
+
+        renderExplosions();
+        removeDead();
+
+        handleGameOverIfPlayerDead();
+        handleGameWonIfAllEnemiesDead();
+
+        // TODO check if player score is worthy of an achievement
+
+
+    }
+
+    private void handleEnemySpawning() {
         if (enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
@@ -292,8 +307,9 @@ public class GameMechanics {
                 }
             }
         }
+    }
 
-        // Check if enemy bullet hits player
+    private void checkIfEnemyBulletHitsPLayer() {
         if (!player.exploding) {
             for (Shot shot : enemyShots) {
                 if (player.hasCollided(shot)) {
@@ -302,16 +318,6 @@ public class GameMechanics {
                 }
             }
         }
-
-        renderExplosions();
-        removeDead();
-
-        handleGameOverIfPlayerDead();
-        handleGameWonIfAllEnemiesDead();
-
-        // TODO check if player score is worthy of an achievement
-
-
     }
 
     private void handleGameOverIfPlayerDead() {
