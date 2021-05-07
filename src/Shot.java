@@ -5,10 +5,9 @@ import javafx.scene.paint.Color;
  * Bullets (shots) from either the player or enemies.
  */
 public class Shot extends Sprite {
-    String origin; // String origin??
+    String origin;
     Color color;
-    static final int size = 8;
-    boolean cooldown;
+    int damage;
 
     /**
      * Constructor.
@@ -18,17 +17,22 @@ public class Shot extends Sprite {
      * @param width Width in x-axis.
      * @param velocity Speed.
      */
-    public Shot(double posX, double posY, int height, int width, double velocity) { // TODO: Add String origin
+    public Shot(double posX, double posY, int height, int width, double velocity, String origin) {
         super(posX, posY, height, width, velocity);
-        this.origin = origin; // String origin
+        this.origin = origin;
         this.color = Color.RED;
+        this.damage = 100;
     }
 
     /**
      * Updates the y-position of the bullets
      */
     public void update() {
-        posY += velocity;
+        if (origin.equalsIgnoreCase("player")) {
+            posY += velocity;
+        } else {
+            posY -= velocity;
+        }
     }
 
     /**
@@ -47,19 +51,5 @@ public class Shot extends Sprite {
 //        }
     }
 
-    private void upgradeWeapon(GraphicsContext gc) {
-        gc.setFill(Color.YELLOWGREEN);
-        velocity = 50;
-        gc.fillRect(posX-5, posY-10, size+10, size+30);
-    }
-
-    private void shootNormalBullets(GraphicsContext gc) {
-        gc.fillOval(posX, posY, size, size);
-    }
-
     // TODO: Add method that handles collisions.
-
-    public static int getSize() {
-        return size;
-    }
 }
