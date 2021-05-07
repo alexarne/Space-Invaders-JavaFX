@@ -192,10 +192,7 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.setFont(Font.font(20));
-        gc.setFill(Color.YELLOW);
-        gc.fillText("Score: " + player.getScore(), 10,  20);
+        showPlayerScoreDuringGameplay();
 
         // Calculate FPS
         if (stopwatch.isRunning()) {
@@ -317,13 +314,17 @@ public class GameMechanics {
             gc.setFont(Font.font(30));
             gc.setFill(Color.RED);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("The Enemy Won \n Your Score is: "  + " \n Click to play again",
+            gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n Click to play again",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
 
         // TODO: Check if all enemies are dead; game won
         if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
-            System.out.println("game won");
+            gc.setFont(Font.font(30));
+            gc.setFill(Color.RED);
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("The Enemies Have Been Destroyed" + " \n Click to play the next level",
+                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         } else {
             System.out.println(enemies.size());
 
@@ -332,6 +333,13 @@ public class GameMechanics {
         // TODO check if player score is worthy of an achievement
 
 
+    }
+
+    private void showPlayerScoreDuringGameplay() {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Score: " + player.getScore(), 10,  20);
     }
 
     private void renderStars() {
