@@ -146,7 +146,7 @@ public class GameMechanics {
      */
     public void gameSetup() {
         // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
-        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH);
+        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, 1);
 
         // Load enemies according to level: //TODO
         amountOfEnemies = 20;
@@ -245,6 +245,23 @@ public class GameMechanics {
                     }
                 }
             }
+            // Check player-enemy collisions
+            if (player.hasCollided(enemy) && !player.exploding) {
+                player.explode();
+                enemy.explode();
+                explosions.add(enemy);
+                deadEnemies.add(enemy);
+                continue;
+            }
+            // Check if player bullet hits enemy
+            for (Shot shot : playerShots) {
+                if (shot.hasCollided(enemy)) {
+                    enemy.explode();
+                    explosions.add(enemy);
+                    deadEnemies.add(enemy);
+                    playerDeadShots.add(shot);
+                }
+            }
         }
 
         // Enemies
@@ -268,30 +285,12 @@ public class GameMechanics {
             }
         }
 
-        // Collisions and dead marking
-        for (Enemy enemy : enemies) {
-            if (player.hasCollided(enemy) && !player.exploding) {
-                player.explode();
-                enemy.explode();
-                explosions.add(enemy);
-                deadEnemies.add(enemy);
-                continue;
-            }
-            for (Shot shot : playerShots) {
-                if (shot.hasCollided(enemy)) {
-                    enemy.explode();
-                    explosions.add(enemy);
-                    deadEnemies.add(enemy);
-                    playerDeadShots.add(shot);
-                }
-            }
-        }
+        // Check if enemy bullet hits player
         if (!player.exploding) {
             for (Shot shot : enemyShots) {
                 if (player.hasCollided(shot)) {
                     player.hit(shot);
                     enemyDeadShots.add(shot);
-
                 }
             }
         }
@@ -301,6 +300,22 @@ public class GameMechanics {
 
         // Remove all dead
         removeDead();
+
+        // Check if player is dead; game over
+        if (player.dead) {
+            gc.setFill(Color.GREEN);
+            gc.fillRect(200, 200, 100, 150);
+        }
+        // Check if all enemies are dead; game won
+        if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
+            System.out.println("game won");
+        } else {
+            System.out.println(enemies.size());
+
+        }
+
+        // TODO check if player score is worthy of an achievement
+
 
     }
 

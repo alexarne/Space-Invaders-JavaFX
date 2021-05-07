@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
  * The player.
  */
 public class Player extends Rocket {
-    int windowWidth;
+    int windowWidth, score, scoreAmplifier;
     String origin;
 
     /**
@@ -19,12 +19,21 @@ public class Player extends Rocket {
      * @param health Health.
      * @param windowWidth The screens width.
      */
-    public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth) {
+    public Player(double posX, double posY, int height, int width, double velocity, Image img, int health, int windowWidth, int scoreAmplifier) {
         super(posX, posY, height, width, velocity, img, health);
         this.windowWidth = windowWidth;
         this.cooldown = 200;
         this.cooldownTracker = 0;
         this.origin = "player";
+        this.score = 0;
+        this.scoreAmplifier = scoreAmplifier;
+    }
+
+    /**
+     * Updates the score for the player with regards to the scoreAmplifier value.
+     */
+    public void updateScore() {
+        this.score += 50 * scoreAmplifier;
     }
 
     /**
@@ -94,7 +103,6 @@ public class Player extends Rocket {
 
     /**
      * What to do when the player is damaged.
-     * In this case the player image flashes red.
      */
     public void hit(Shot shot) {
         if (health - shot.damage > 0) {
