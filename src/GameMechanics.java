@@ -19,7 +19,6 @@ public class GameMechanics {
     private GraphicsContext gc;
     private StackPane root;
     private Scene gameScene;
-    private Color gameBgColor;
     private Random rnd;
 
     // User inputs
@@ -43,6 +42,10 @@ public class GameMechanics {
     private double spawnProbability;
 
     private Player player;
+    private Color gameBgColor;
+
+    private Color hpColor;
+    private Color ammoColor;
 
     private LinkedList<Star> stars;
     private LinkedList<Star> deadStars;
@@ -56,7 +59,6 @@ public class GameMechanics {
     private LinkedList<Enemy> deadExplosions;
 
     private Stopwatch stopwatch;
-    private long fps;
     private LinkedList<Long> fpsArr;
     private int fpsSample;
 
@@ -87,6 +89,9 @@ public class GameMechanics {
      * Start the game.
      */
     public void load() {
+        this.hpColor = Color.rgb(64, 221, 61);
+        this.ammoColor = Color.rgb(217, 151, 52);
+
         this.rnd = new Random();
         playerInPosition = false;
 
@@ -146,7 +151,9 @@ public class GameMechanics {
      */
     public void gameSetup() {
         // Player(int posX, int posY, int height, int width, int velocity, Image img, int health, int windowWidth)
-        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, 1);
+        int sA = 1;
+        int dP = 40;
+        player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, sA, dP);
 
         // Load enemies according to level: //TODO
         amountOfEnemies = 20;
@@ -161,7 +168,8 @@ public class GameMechanics {
             int hp = 100;
             boolean s = true;
             boolean b = false;
-            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s, b, 0.003);
+            int dE = 30;
+            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s, b, 0.003, dE, gameBgColor);
         }
         spawnProbability = 0.01;
         enemiesLoaded = 0;
@@ -249,6 +257,7 @@ public class GameMechanics {
             if (player.hasCollided(enemy) && !player.exploding) {
                 player.explode();
                 enemy.explode();
+                player.health = 0;
                 explosions.add(enemy);
                 deadEnemies.add(enemy);
                 continue;
@@ -256,10 +265,12 @@ public class GameMechanics {
             // Check if player bullet hits enemy
             for (Shot shot : playerShots) {
                 if (shot.hasCollided(enemy)) {
-                    enemy.explode();
-                    explosions.add(enemy);
-                    deadEnemies.add(enemy);
+                    enemy.hit(shot);
                     playerDeadShots.add(shot);
+                    if (enemy.health == 0) {
+                        explosions.add(enemy);
+                        deadEnemies.add(enemy);
+                    }
                 }
             }
         }
@@ -310,9 +321,10 @@ public class GameMechanics {
         if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
             System.out.println("game won");
         } else {
-            System.out.println(enemies.size());
 
         }
+
+        renderHUD();
 
         // TODO check if player score is worthy of an achievement
 
@@ -393,6 +405,39 @@ public class GameMechanics {
         deadStars.clear();
         playerDeadShots.clear();
         deadEnemies.clear();
+    }
+
+    private void renderHUD() {
+        renderHP();
+        renderAmmo();
+    }
+
+    private void renderHP() {
+        gc.setFill(hpColor);
+        gc.fillRect(10, WINDOW_HEIGHT-2*10-2*1, 150+2*1, 10+2*1);
+
+        gc.setFill(gameBgColor);
+        gc.fillRect(10 + 1, WINDOW_HEIGHT-2*10-2*1 + 1, 150, 10);
+
+        gc.setFill(hpColor);
+        gc.fillRect(10 + 1, WINDOW_HEIGHT-2*10-2*1 + 1, (150)*player.health/100, 10);
+    }
+
+    private void renderAmmo() {
+        gc.setFill(ammoColor);
+        gc.fillRect(WINDOW_WIDTH-10-150+2*1 - 4, WINDOW_HEIGHT-2*10-2*1, 150+2*1, 10+2*1);
+
+        gc.setFill(gameBgColor);
+        gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4, WINDOW_HEIGHT-2*10-2*1 + 1, 150, 10);
+
+        gc.setFill(ammoColor);
+        if (player.reloading) {
+            gc.setGlobalAlpha(0.3);
+            gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4 + 150 - 150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, WINDOW_HEIGHT-2*10-2*1 + 1, 150*(player.reloadTimeMax-player.reloadTimeCurrent)/player.reloadTimeMax, 10);
+            gc.setGlobalAlpha(1);
+        } else {
+            gc.fillRect(WINDOW_WIDTH-10-150+2*1 + 1 - 4 + 150 - 150*player.ammunitionCurrent/player.ammunitionMax, WINDOW_HEIGHT-2*10-2*1 + 1, 150*player.ammunitionCurrent/player.ammunitionMax, 10);
+        }
     }
 
     private boolean isOutsideScreen(Sprite who) {

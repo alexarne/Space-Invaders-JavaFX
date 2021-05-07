@@ -6,7 +6,8 @@ import javafx.scene.image.Image;
  */
 public class Rocket extends Sprite {
     int explosionStep, explosionStepMax, EXPLOSION_COL, EXPLOSION_ROW,
-            EXPLOSION_W, EXPLOSION_H, EXPLOSION_TIMER, health, cooldown, cooldownTracker;
+            EXPLOSION_W, EXPLOSION_H, EXPLOSION_TIMER, health, cooldown,
+            cooldownTracker, damage;
     boolean exploding;
     Image img, EXPLOSION_IMG;
 
@@ -20,7 +21,7 @@ public class Rocket extends Sprite {
      * @param img Image.
      * @param health Health.
      */
-    public Rocket(double posX, double posY, int height, int width, double velocity, Image img, int health) {
+    public Rocket(double posX, double posY, int height, int width, double velocity, Image img, int health, int damage) {
         super(posX, posY, height, width, velocity);
         this.img = img;
         this.health = health;
@@ -33,6 +34,7 @@ public class Rocket extends Sprite {
         this.EXPLOSION_W = (int) EXPLOSION_IMG.getWidth() / EXPLOSION_COL;
         this.EXPLOSION_H = (int) EXPLOSION_IMG.getHeight() / EXPLOSION_ROW;
         this.EXPLOSION_TIMER = 0;
+        this.damage = damage;
     }
 
     public void explode() {

@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * Enemies travelling towards the player.
@@ -8,6 +9,7 @@ public class Enemy extends Rocket {
     boolean ableToShoot, boss;
     String origin;
     double shootingProbability;
+    Color bgColor, hpColor;
 
     /**
      * Constructor.
@@ -19,13 +21,15 @@ public class Enemy extends Rocket {
      * @param ableToShoot Is able to shoot or not.
      * @param boss Is boss or not.
      */
-    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot, boolean boss, double shootingProbability) {
-        super(posX, posY, (int) img.getHeight(), (int) img.getWidth(), velocity, img, health);
+    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot, boolean boss, double shootingProbability, int damage, Color bgColor) {
+        super(posX, posY, (int) img.getHeight(), (int) img.getWidth(), velocity, img, health, damage);
         this.ableToShoot = ableToShoot;
         this.cooldown = 200;
         this.cooldownTracker = 0;
         this.origin = "enemy";
         this.shootingProbability = shootingProbability;
+        this.bgColor = bgColor;
+        this.hpColor = Color.rgb(235, 73, 52);
     }
 
     /**
@@ -38,6 +42,12 @@ public class Enemy extends Rocket {
         } else {
             update();
             gc.drawImage(img, posX, posY);
+            gc.setFill(hpColor);
+            gc.fillRect(posX, posY-4-4, width, 4);
+            gc.setFill(bgColor);
+            gc.fillRect(posX+1, posY-4-4+1, width-2, 4-2);
+            gc.setFill(hpColor);
+            gc.fillRect(posX+1, posY-4-4+1, (width-2)*health/100, 4-2);
         }
     }
 
@@ -64,11 +74,23 @@ public class Enemy extends Rocket {
             double x = posX + width / 2 - w / 2;
             double y = posY + height - h;
             for (int i = 0; i < amountOfBullets; i++) {
-                s[i] = new Shot(x, y, h, w, bulletVelocity, origin);
+                s[i] = new Shot(x, y, origin, h, w, bulletVelocity, damage);
             }
             return s;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * What to do when the enemy is damaged.
+     */
+    public void hit(Shot shot) {
+        if (health - shot.damage > 0) {
+            health -= shot.damage;
+        } else {
+            health = 0;
+            explode();
         }
     }
 }
