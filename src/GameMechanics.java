@@ -195,6 +195,41 @@ public class GameMechanics {
         showAmountOfEnemiesLeft();
 
         // Calculate FPS
+        calculateFPS();
+
+        // Stars
+        renderStars();
+        addNewStars();
+
+        // Player
+        handlePlayerMechanics();
+
+        // Shots
+        renderShots();
+
+        // Enemies
+        // Enemy shooting
+        // TODO: Gillar inte att så mycket händer i den här for-loopen,renare kod om det hade kunnat delats upp i 3 metoder
+        for (Enemy enemy : enemies) {
+            handleEnemyShooting(enemy);
+            if (playerAndEnemyCollide(enemy)) continue;
+            checkIfPlayerBulletHitsEnemy(enemy);
+        }
+        renderEnemies();
+        handleEnemySpawning();
+        checkIfEnemyBulletHitsPLayer();
+
+        renderExplosions();
+        removeDead();
+
+        // Handle game state
+        handleGameOverIfPlayerDead();
+        handleGameWonIfAllEnemiesDead();
+
+        // TODO check if player score is worthy of an achievement
+    }
+
+    private void calculateFPS() {
         if (stopwatch.isRunning()) {
             long time = stopwatch.nanoseconds();
             fpsArr.add(time);
@@ -210,17 +245,17 @@ public class GameMechanics {
             stopwatch.reset();
         }
         stopwatch.start();
+    }
 
-        // Stars
-        renderStars();
-        // Add new stars
+    private void addNewStars() {
         if (stars.size() <= 5 && rnd.nextFloat() < 0.3) {
             stars.add(createStar());
         } else if (stars.size() <= 30 && rnd.nextFloat() < 0.05) {
             stars.add(createStar());
         }
+    }
 
-        // Player
+    private void handlePlayerMechanics() {
         if (playerInPosition && !player.exploding) {
             // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
@@ -235,31 +270,6 @@ public class GameMechanics {
             }
             player.draw(gc);
         }
-
-        // Shots
-        renderShots();
-
-        // TODO: Gillar inte att så mycket händer i den här for-loopen,
-        //  renare kod om det hade kunnat delats upp i 3 metoder
-        // Enemy shooting
-        for (Enemy enemy : enemies) {
-            handleEnemyShooting(enemy);
-            if (playerAndEnemyCollide(enemy)) continue;
-            checkIfPlayerBulletHitsEnemy(enemy);
-        }
-
-        renderEnemies();
-        handleEnemySpawning();
-
-        checkIfEnemyBulletHitsPLayer();
-
-        renderExplosions();
-        removeDead();
-
-        handleGameOverIfPlayerDead();
-        handleGameWonIfAllEnemiesDead();
-
-        // TODO check if player score is worthy of an achievement
     }
 
     private void handleEnemyShooting(Enemy enemy) {
