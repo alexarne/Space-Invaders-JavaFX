@@ -37,6 +37,14 @@ public class Player extends Rocket {
     }
 
     /**
+     * Get's the players score.
+     * @return player score.
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
      * Draws the player onto the canvas.
      * @param gc The canvas.
      */

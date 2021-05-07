@@ -192,6 +192,11 @@ public class GameMechanics {
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Score: " + player.getScore(), 10,  20);
+
         // Calculate FPS
         if (stopwatch.isRunning()) {
             long time = stopwatch.nanoseconds();
@@ -265,6 +270,7 @@ public class GameMechanics {
                     explosions.add(enemy);
                     deadEnemies.add(enemy);
                     playerDeadShots.add(shot);
+                    player.updateScore();
                 }
             }
         }
