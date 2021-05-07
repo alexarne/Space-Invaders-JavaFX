@@ -251,16 +251,8 @@ public class GameMechanics {
                 }
             }
 
-            // Check player-enemy collisions
-            if (player.hasCollided(enemy) && !player.exploding) {
-                player.explode();
-                enemy.explode();
-                explosions.add(enemy);
-                deadEnemies.add(enemy);
-                continue;
-            }
+            if (playerAndEnemyCollide(enemy)) continue;
 
-            // Check if player bullet hits enemy
             checkIfPlayerBulletHitsEnemy(enemy);
         }
 
@@ -276,8 +268,17 @@ public class GameMechanics {
         handleGameWonIfAllEnemiesDead();
 
         // TODO check if player score is worthy of an achievement
+    }
 
-
+    private boolean playerAndEnemyCollide(Enemy enemy) {
+        if (player.hasCollided(enemy) && !player.exploding) {
+            player.explode();
+            enemy.explode();
+            explosions.add(enemy);
+            deadEnemies.add(enemy);
+            return true;
+        }
+        return false;
     }
 
     private void checkIfPlayerBulletHitsEnemy(Enemy enemy) {
