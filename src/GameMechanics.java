@@ -238,21 +238,13 @@ public class GameMechanics {
 
         // Shots
         renderShots();
+
+        // TODO: Gillar inte att så mycket händer i den här for-loopen,
+        //  renare kod om det hade kunnat delats upp i 3 metoder
         // Enemy shooting
         for (Enemy enemy : enemies) {
-            if (enemy.ableToShoot) {
-                if (rnd.nextDouble() < enemy.shootingProbability) {
-                    Shot[] s = enemy.shoot();
-                    if (s != null) {
-                        for (Shot shot : s) {
-                            enemyShots.add(shot);
-                        }
-                    }
-                }
-            }
-
+            handleEnemyShooting(enemy);
             if (playerAndEnemyCollide(enemy)) continue;
-
             checkIfPlayerBulletHitsEnemy(enemy);
         }
 
@@ -268,6 +260,19 @@ public class GameMechanics {
         handleGameWonIfAllEnemiesDead();
 
         // TODO check if player score is worthy of an achievement
+    }
+
+    private void handleEnemyShooting(Enemy enemy) {
+        if (enemy.ableToShoot) {
+            if (rnd.nextDouble() < enemy.shootingProbability) {
+                Shot[] s = enemy.shoot();
+                if (s != null) {
+                    for (Shot shot : s) {
+                        enemyShots.add(shot);
+                    }
+                }
+            }
+        }
     }
 
     private boolean playerAndEnemyCollide(Enemy enemy) {
