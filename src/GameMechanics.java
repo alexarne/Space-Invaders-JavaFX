@@ -192,6 +192,7 @@ public class GameMechanics {
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         showPlayerScoreDuringGameplay();
+        showAmountOfEnemiesLeft();
 
         // Calculate FPS
         if (stopwatch.isRunning()) {
@@ -336,6 +337,14 @@ public class GameMechanics {
         gc.setFont(Font.font(20));
         gc.setFill(Color.YELLOW);
         gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    private void showAmountOfEnemiesLeft() {
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        int amountLeft = 0;
+        gc.fillText("Enemies left: " + amountLeft, 500,  20);
     }
 
     private boolean allEnemiesLoadedAndAllAreDead() {
