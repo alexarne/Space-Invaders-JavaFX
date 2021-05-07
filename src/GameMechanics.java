@@ -303,13 +303,18 @@ public class GameMechanics {
             }
         }
 
-        // Render explosions
         renderExplosions();
-
-        // Remove all dead
         removeDead();
 
-        // TODO: Check if player is dead; game over
+        handleGameOverIfPlayerDead();
+        handleGameWonIfAllEnemiesDead();
+
+        // TODO check if player score is worthy of an achievement
+
+
+    }
+
+    private void handleGameOverIfPlayerDead() {
         if (player.dead) {
             gc.setFont(Font.font(30));
             gc.setFill(Color.RED);
@@ -317,8 +322,10 @@ public class GameMechanics {
             gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n\n Click here to play again",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
+    }
 
-        // TODO: Check if all enemies are dead; game won
+    private void handleGameWonIfAllEnemiesDead() {
+        // TODO: Make it so that the text "Click here" leads to a new level.
         if (allEnemiesLoadedAndAllAreDead()) {
             gc.setFont(Font.font(30));
             gc.setFill(Color.RED);
@@ -326,10 +333,6 @@ public class GameMechanics {
             gc.fillText("The Enemies Have Been Destroyed!" + " \n\n Click here to play the next level",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
-
-        // TODO check if player score is worthy of an achievement
-
-
     }
 
     private void showPlayerScoreDuringGameplay() {
