@@ -308,7 +308,7 @@ public class GameMechanics {
     }
 
     private void handleEnemySpawning() {
-        if (thereAreEnemiesToLoadAndPLayerIsAlive()) {
+        if (thereAreEnemiesToLoadAndPlayerIsAlive()) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
                 // TODO clever spawning? this is just a lazy fix
@@ -327,7 +327,7 @@ public class GameMechanics {
         }
     }
 
-    private boolean thereAreEnemiesToLoadAndPLayerIsAlive() {
+    private boolean thereAreEnemiesToLoadAndPlayerIsAlive() {
         return enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding;
     }
 
