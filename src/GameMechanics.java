@@ -221,7 +221,7 @@ public class GameMechanics {
         renderExplosions();
         removeDead();
 
-        // Handle game state
+        // Game state
         handleGameOverIfPlayerDead();
         handleGameWonIfAllEnemiesDead();
 
