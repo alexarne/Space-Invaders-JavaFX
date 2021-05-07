@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,6 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
 
@@ -245,6 +248,7 @@ public class GameMechanics {
                     }
                 }
             }
+
             // Check player-enemy collisions
             if (player.hasCollided(enemy) && !player.exploding) {
                 player.explode();
@@ -253,6 +257,7 @@ public class GameMechanics {
                 deadEnemies.add(enemy);
                 continue;
             }
+
             // Check if player bullet hits enemy
             for (Shot shot : playerShots) {
                 if (shot.hasCollided(enemy)) {
@@ -301,12 +306,16 @@ public class GameMechanics {
         // Remove all dead
         removeDead();
 
-        // Check if player is dead; game over
+        // TODO: Check if player is dead; game over
         if (player.dead) {
-            gc.setFill(Color.GREEN);
-            gc.fillRect(200, 200, 100, 150);
+            gc.setFont(Font.font(30));
+            gc.setFill(Color.RED);
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("The Enemy Won \n Your Score is: "  + " \n Click to play again",
+                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
-        // Check if all enemies are dead; game won
+
+        // TODO: Check if all enemies are dead; game won
         if (enemiesLoaded == enemiesLoad.length && enemies.size() == 0) {
             System.out.println("game won");
         } else {
