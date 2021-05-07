@@ -261,19 +261,10 @@ public class GameMechanics {
             }
 
             // Check if player bullet hits enemy
-            for (Shot shot : playerShots) {
-                if (shot.hasCollided(enemy)) {
-                    enemy.explode();
-                    explosions.add(enemy);
-                    deadEnemies.add(enemy);
-                    playerDeadShots.add(shot);
-                    player.updateScore();
-                }
-            }
+            checkIfPlayerBulletHitsEnemy(enemy);
         }
 
         renderEnemies();
-        // Spawn next Enemy randomly if not all spawned already and if player is alive
         handleEnemySpawning();
 
         checkIfEnemyBulletHitsPLayer();
@@ -289,8 +280,20 @@ public class GameMechanics {
 
     }
 
+    private void checkIfPlayerBulletHitsEnemy(Enemy enemy) {
+        for (Shot shot : playerShots) {
+            if (shot.hasCollided(enemy)) {
+                enemy.explode();
+                explosions.add(enemy);
+                deadEnemies.add(enemy);
+                playerDeadShots.add(shot);
+                player.updateScore();
+            }
+        }
+    }
+
     private void handleEnemySpawning() {
-        if (enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding) {
+        if (thereAreEnemiesToLoadAndPLayerIsAlive()) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
                 // TODO clever spawning? this is just a lazy fix
@@ -307,6 +310,10 @@ public class GameMechanics {
                 }
             }
         }
+    }
+
+    private boolean thereAreEnemiesToLoadAndPLayerIsAlive() {
+        return enemiesLoaded < amountOfEnemies && playerInPosition && !player.exploding;
     }
 
     private void checkIfEnemyBulletHitsPLayer() {
