@@ -228,6 +228,22 @@ public class GameMechanics {
         // TODO check if player score is worthy of an achievement
     }
 
+    private void showPlayerScoreDuringGameplay() {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    // TODO: Implement idea or discard it.
+    private void showAmountOfEnemiesLeft() {
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        int amountLeft = 0;
+        gc.fillText("Enemies left: " + amountLeft, 500,  20);
+    }
+
     private void calculateFPS() {
         if (stopwatch.isRunning()) {
             long time = stopwatch.nanoseconds();
@@ -361,22 +377,6 @@ public class GameMechanics {
             gc.fillText("The Enemies Have Been Destroyed!" + " \n\n Click here to play the next level",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
         }
-    }
-
-    private void showPlayerScoreDuringGameplay() {
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.setFont(Font.font(20));
-        gc.setFill(Color.YELLOW);
-        gc.fillText("Score: " + player.getScore(), 10,  20);
-    }
-
-    // TODO: Implement idea or discard it.
-    private void showAmountOfEnemiesLeft() {
-        gc.setTextAlign(TextAlignment.RIGHT);
-        gc.setFont(Font.font(20));
-        gc.setFill(Color.YELLOW);
-        int amountLeft = 0;
-        gc.fillText("Enemies left: " + amountLeft, 500,  20);
     }
 
     private boolean allEnemiesLoadedAndAllAreDead() {
