@@ -206,14 +206,14 @@ public class GameMechanics {
         // Shots
         renderShots();
 
-        // Enemies
-
         // Enemy shooting
         for (Enemy enemy : enemies) { // TODO: Too much happening, hard to clean the code. Should be three methods.
             handleEnemyShooting(enemy);
             if (playerAndEnemyCollide(enemy)) continue;
             checkIfPlayerBulletHitsEnemy(enemy);
         }
+
+        // Enemies
         renderEnemies();
         handleEnemySpawning();
         checkIfEnemyBulletHitsPLayer();
@@ -434,29 +434,45 @@ public class GameMechanics {
     }
 
     private void removeDead() {
-        // Remove dead stars
-        for (Star deadStar : deadStars) {
-            stars.remove(deadStar);
-        }
-        // Remove dead shots
-        for (Shot deadShot : playerDeadShots) {
-            playerShots.remove(deadShot);
-        }
-        // Remove dead shots
-        for (Shot deadShot : enemyDeadShots) {
-            enemyShots.remove(deadShot);
-        }
-        // Remove dead enemies
-        for (Enemy deadEnemy : deadEnemies) {
-            enemies.remove(deadEnemy);
-        }
-        // Remove dead explosions
-        for (Enemy deadExplosion : deadExplosions) {
-            explosions.remove(deadExplosion);
-        }
+        removeDeadStars();
+        removePlayerDeadShots(playerDeadShots, playerShots);
+        removeEnemyDeadShots(enemyDeadShots, enemyShots);
+        removeDeadEnemies(deadEnemies, enemies);
+        removeDeadExplosions(deadExplosions, explosions);
+
         deadStars.clear();
         playerDeadShots.clear();
         deadEnemies.clear();
+    }
+
+    private void removeDeadStars() {
+        for (Star deadStar : deadStars) {
+            stars.remove(deadStar);
+        }
+    }
+
+    private void removePlayerDeadShots(LinkedList<Shot> playerDeadShots, LinkedList<Shot> playerShots) {
+        for (Shot deadShot : playerDeadShots) {
+            playerShots.remove(deadShot);
+        }
+    }
+
+    private void removeEnemyDeadShots(LinkedList<Shot> enemyDeadShots, LinkedList<Shot> enemyShots) {
+        for (Shot deadShot : enemyDeadShots) {
+            enemyShots.remove(deadShot);
+        }
+    }
+
+    private void removeDeadEnemies(LinkedList<Enemy> deadEnemies, LinkedList<Enemy> enemies) {
+        for (Enemy deadEnemy : deadEnemies) {
+            enemies.remove(deadEnemy);
+        }
+    }
+
+    private void removeDeadExplosions(LinkedList<Enemy> deadExplosions, LinkedList<Enemy> explosions) {
+        for (Enemy deadExplosion : deadExplosions) {
+            explosions.remove(deadExplosion);
+        }
     }
 
     private boolean isOutsideScreen(Sprite who) {
