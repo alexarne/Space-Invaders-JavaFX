@@ -45,6 +45,18 @@ public class Main extends Application {
         window.show();
     }
 
+    public Scene getMainScene() {
+        return mainScene;
+    }
+
+    /**
+     * Load the Main Menu.
+     */
+    public void mainMenu(Stage window) {
+        this.window = window;
+        mainMenu();
+    }
+
     /**
      * Load the Main Menu.
      */
@@ -64,12 +76,13 @@ public class Main extends Application {
         ArrayList<Text> textArr = new ArrayList<>(
                 Arrays.asList(
                         startGame,
-                        highscore,
                         inventory,
                         achievements,
+                        highscore,
                         settings
                 )
         );
+        showButtons(menuText, textArr);
         highlightButtons(textArr);
 
         // Configure animations
@@ -87,6 +100,49 @@ public class Main extends Application {
         for (Text label : textArr) {
             root.getChildren().add(label);
         }
+    }
+
+    private void showButtons(Text menuText, ArrayList<Text> textArr) {
+        Duration duration = Duration.millis(500);
+        Interpolator interp = Interpolator.EASE_OUT;
+
+        PauseTransition last = staggeredButtonAnimation(menuText, duration, interp, null);
+        for (Text label : textArr) {
+            last = staggeredButtonAnimation(label, duration, interp, last);
+        }
+    }
+
+    private PauseTransition staggeredButtonAnimation(Text label, Duration duration, Interpolator interp, PauseTransition last) {
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(duration);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.setNode(label);
+        fade.setInterpolator(interp);
+        ScaleTransition scale = new ScaleTransition();
+        scale.setDuration(duration);
+        scale.setFromX(1.2);
+        scale.setFromY(1.2);
+        scale.setToX(1);
+        scale.setToY(1);
+        scale.setNode(label);
+        scale.setInterpolator(interp);
+
+        Duration d = duration.divide(5);
+        PauseTransition p = new PauseTransition(d);
+        if (last != null) {
+            last.setOnFinished(e -> {
+                fade.play();
+                scale.play();
+                p.play();
+            });
+        } else {
+            fade.play();
+            scale.play();
+            p.play();
+        }
+
+        return p;
     }
 
     private Rectangle getBackground() {
@@ -110,6 +166,7 @@ public class Main extends Application {
         label.setFont(Font.font("Sitka Small", fontSize));
         label.setX(WINDOW_WIDTH / 2 - label.getLayoutBounds().getWidth() / 2);
         label.setY(posY);
+        label.setOpacity(0);
         return label;
     }
 
@@ -135,7 +192,7 @@ public class Main extends Application {
             }
             transitionFade(menuText, animationDuration, interp);
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, gameBgColor);
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor);
             FillTransition transitionBackground = new FillTransition();
             transitionBackground.setDuration(Duration.millis(300));
             transitionBackground.setToValue(gameBgColor);

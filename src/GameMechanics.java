@@ -1,17 +1,18 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -19,9 +20,10 @@ public class GameMechanics {
     private int WINDOW_WIDTH;
     private int WINDOW_HEIGHT;
     private GraphicsContext gc;
-    private StackPane root;
+    private Pane root;
     private Scene gameScene;
     private Random rnd;
+    private Stage window;
 
     // User inputs
     private boolean playerMoveLeft;
@@ -50,6 +52,8 @@ public class GameMechanics {
 
     private Color hpColor;
     private Color ammoColor;
+    private Color gameoverColor;
+    private Color gameoverColorHover;
 
     private LinkedList<Star> stars;
     private LinkedList<Star> deadStars;
@@ -66,15 +70,22 @@ public class GameMechanics {
     private LinkedList<Long> fpsArr;
     private int fpsSample;
 
+    private boolean gameoverDisplayed;
+    private Text buttonQuit;
+    private Text buttonRetry;
+    private Text buttonNext;
+
     private double updateFrequency;
 
-    public GameMechanics(int width, int height, Color color) {
+    public GameMechanics(int width, int height, Stage window, Color color) {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
+        this.gameoverDisplayed = false;
+        this.window = window;
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
-        root = new StackPane(canvas);
+        root = new Pane(canvas);
         gameScene = new Scene(root);
         gc.setFill(gameBgColor);
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -95,6 +106,8 @@ public class GameMechanics {
     public void load() {
         this.hpColor = Color.rgb(64, 221, 61);
         this.ammoColor = Color.rgb(217, 151, 52);
+        this.gameoverColor = Color.rgb(212, 72, 51);
+        this.gameoverColorHover = Color.rgb(255, 135, 117);
 
         this.rnd = new Random();
         playerInPosition = false;
@@ -104,7 +117,79 @@ public class GameMechanics {
         playerShoot = false;
         handleUserInputs();
 
+        prepareButtons();
         gameSetup();
+    }
+
+    private void prepareButtons() {
+        Main main = new Main();
+        Duration duration = Duration.millis(300);
+        Interpolator interp = Interpolator.EASE_OUT;
+
+        buttonQuit = makeGameoverButton("Quit");
+        buttonQuit.setOnMouseReleased(e -> {
+            main.animateButton(buttonQuit, true, duration, interp);
+            main.animateButton(buttonRetry, false, duration, interp);
+            main.animateButton(buttonNext, false, duration, interp);
+
+            Rectangle r = new Rectangle();
+            r.setFill(Color.WHITE);
+            r.setWidth(WINDOW_WIDTH);
+            r.setHeight(WINDOW_HEIGHT);
+            r.setOpacity(0);
+            FadeTransition fade = new FadeTransition();
+            fade.setDuration(duration);
+            fade.setToValue(1);
+            fade.setNode(r);
+            fade.setInterpolator(interp);
+            fade.setOnFinished(f -> {
+                Scene mainScene = main.getMainScene();
+                window.setScene(mainScene);
+            });
+            root.getChildren().add(r);
+            fade.play();
+            main.mainMenu(window);
+        });
+        buttonRetry = makeGameoverButton("Try Again");
+        buttonRetry.setOnMouseReleased(e -> {
+            main.animateButton(buttonRetry, true, duration, interp);
+            main.animateButton(buttonRetry, false, duration, interp);
+            main.animateButton(buttonNext, false, duration, interp);
+
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor);
+            Rectangle r = new Rectangle();
+            r.setFill(gameBgColor);
+            r.setWidth(WINDOW_WIDTH);
+            r.setHeight(WINDOW_HEIGHT);
+            r.setOpacity(0);
+            FadeTransition fade = new FadeTransition();
+            fade.setDuration(duration);
+            fade.setToValue(1);
+            fade.setNode(r);
+            fade.setInterpolator(interp);
+            fade.setOnFinished(f -> {
+                gameMechanics.load();
+                Scene game = gameMechanics.getGameScene();
+                window.setScene(game);
+                gameMechanics.startGame();
+            });
+            root.getChildren().add(r);
+            fade.play();
+            gameMechanics.animatePlayerIn();
+        });
+        buttonNext = makeGameoverButton("Next Level");
+
+    }
+
+    private Text makeGameoverButton(String s) {
+        Text button = new Text(s);
+        button.setTextAlignment(TextAlignment.CENTER);
+        button.setFont(Font.font("Sitka Small", 24));
+        button.setFill(gameoverColor);
+        button.setX(WINDOW_WIDTH / 2 - button.getLayoutBounds().getWidth() / 2);
+        button.setOnMouseEntered(e -> button.setFill(gameoverColorHover));
+        button.setOnMouseExited(e -> button.setFill(gameoverColor));
+        return button;
     }
 
     /**
@@ -136,11 +221,12 @@ public class GameMechanics {
      * Animate "the player" as if it's flying in from below
      */
     public void animatePlayerIn() {
-        ImageView playerSub = new ImageView(PLAYER_IMG); // defaults to x = 0 and y = 0, cant change it (?)
+        ImageView playerSub = new ImageView(PLAYER_IMG);
+        playerSub.setX(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2);
         TranslateTransition playerIn = new TranslateTransition();
         playerIn.setDuration(Duration.seconds(1.5));
-        playerIn.setFromY(550);
-        playerIn.setToY(360);
+        playerIn.setFromY(WINDOW_HEIGHT+100);
+        playerIn.setToY(WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2);
         playerIn.setOnFinished(e -> {
             playerInPosition = true;
             root.getChildren().remove(playerSub);
@@ -374,22 +460,40 @@ public class GameMechanics {
 
     private void handleGameOverIfPlayerDead() {
         if (player.dead) {
-            gc.setFont(Font.font(30));
-            gc.setFill(Color.RED);
+            gc.setFont(Font.font("Sitka Small", 40));
+            gc.setFill(gameoverColor);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("The Enemy Won \n Your Score is: " + player.getScore() + " \n\n Click here to play again",
-                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
+            gc.fillText("Game Over", WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
+            gc.setFont(Font.font("Sitka Small", 24));
+            gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
+
+            if (!gameoverDisplayed) {
+                buttonRetry.setY(WINDOW_HEIGHT/3 + 120);
+                buttonQuit.setY(WINDOW_HEIGHT/3 + 160);
+                root.getChildren().addAll(buttonRetry, buttonQuit);
+                gameoverDisplayed = true;
+            }
         }
     }
 
     private void handleGameWonIfAllEnemiesDead() {
         // TODO: Make it so that the text "Click here" leads to a new level.
-        if (allEnemiesLoadedAndAllAreDead()) {
-            gc.setFont(Font.font(30));
-            gc.setFill(Color.RED);
+        if (allEnemiesLoadedAndAllAreDead() && !player.exploding) {
+            gc.setFont(Font.font("Sitka Small", 40));
+            gc.setFill(gameoverColor);
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("The Enemies Have Been Destroyed!" + " \n\n Click here to play the next level",
+            gc.fillText("Level Completed",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
+            gc.setFont(Font.font("Sitka Small", 24));
+            gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
+
+            if (!gameoverDisplayed) {
+                buttonNext.setY(WINDOW_HEIGHT/3 + 120);
+                buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
+                buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
+                root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
+                gameoverDisplayed = true;
+            }
         }
     }
 
