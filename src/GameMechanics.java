@@ -246,21 +246,9 @@ public class GameMechanics {
         player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, sA, dP);
 
         // Load enemies according to level: //TODO
-        amountOfEnemies = 20;
-        enemiesLoad = new Enemy[amountOfEnemies];
-        for (int i = 0; i < amountOfEnemies; i++) {
-            // Read text file and assign values accordingly //TODO
-            int n = 1 + rnd.nextInt(3);
-            Image img = new Image("Assets/Images/enemyrocket" + n + ".png");
-            double x = rnd.nextInt(WINDOW_WIDTH - (int) img.getWidth());
-            double y = - (int) img.getHeight();
-            double v = 1;
-            int hp = 100;
-            boolean s = true;
-            boolean b = false;
-            int dE = 30;
-            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s, b, 0.003, dE, gameBgColor);
-        }
+        LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
+        enemiesLoad = levelLoader.getEnemies(1);
+        amountOfEnemies = levelLoader.getAmountOfEnemies();
         spawnProbability = 0.01;
         enemiesLoaded = 0;
 

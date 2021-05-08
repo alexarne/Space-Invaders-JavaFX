@@ -1,0 +1,26 @@
+// First number specifies the level number and marks the beginning of a level configuration.
+// The second number specifies the amount of enemies for that level which must exactly correspond to the amount of enemies specified after that.
+// Enemies are spawned in the order they appear in the level configuration.
+// A line starting with "enemy" marks an enemy configuration and follows the format:
+// 	"enemy imageNumber velocity hp ableToShoot isBoss shootingProbability damage"
+// imageNumber is the number at the end of an enemy rocket's image:
+// 	"enemyrocket1.png" = 1
+// 	"enemyrocket2.png" = 2
+// 	"enemyrocket3.png" = 3
+// All images for enemy rockets must begin with "enemyrocket", then have their imageNumber and end with ".png".
+// velocity is a positive integer which specifies how fast the enemy will move.
+// hp is a positive integer which specifies the health of the enemy.
+// ableToShoot is a boolean true/false value which specifies whether or not the enemy will be able to shoot.
+// isBoss is a boolean true/false value which specifies if the enemy is a boss or not.
+// shootingProbability is a double which specifies the probability that the enemy shoots
+// damage is a positive integer which specifies how much damage a single shot from the enemy does.
+// A dash at the beginning of a line marks the end of a level configuration.
+
+
+
+1
+20
+enemy imageNumber velocity hp ableToShoot isBoss shootingProbability damage
+-
+
+
