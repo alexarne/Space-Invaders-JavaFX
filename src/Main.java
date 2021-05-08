@@ -121,8 +121,8 @@ public class Main extends Application {
         fade.setInterpolator(interp);
         ScaleTransition scale = new ScaleTransition();
         scale.setDuration(duration);
-        scale.setFromX(1.2);
-        scale.setFromY(1.2);
+        scale.setFromX(1.1);
+        scale.setFromY(1.1);
         scale.setToX(1);
         scale.setToY(1);
         scale.setNode(label);
