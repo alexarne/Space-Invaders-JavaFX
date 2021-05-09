@@ -36,6 +36,7 @@ public class GameMechanics {
     static final Image HP_IMG = new Image("Assets/Images/hp_icon.png");
     static final Image AMMO_IMG = new Image("Assets/Images/ammo_icon.png");
     private boolean playerInPosition;
+    private Rectangle hudAnimate;
 
     // Shots
     private double mouseX;
@@ -227,10 +228,26 @@ public class GameMechanics {
      * Animate "the player" as if it's flying in from below
      */
     public void animatePlayerIn() {
+        Duration duration = Duration.seconds(1.5);
+
+        hudAnimate = new Rectangle();
+        double w = WINDOW_WIDTH-20;
+        int h = 100;
+        hudAnimate.setFill(gameBgColor);
+        hudAnimate.setWidth(w);
+        hudAnimate.setHeight(h);
+        hudAnimate.setX(WINDOW_WIDTH/2 - w/2);
+        hudAnimate.setY(WINDOW_HEIGHT - h);
+        ScaleTransition s = new ScaleTransition();
+        s.setToX(1-304/w);
+        s.setNode(hudAnimate);
+        s.setDuration(duration.divide(1.5));
+        s.setOnFinished(e -> root.getChildren().remove(hudAnimate));
+
         ImageView playerSub = new ImageView(PLAYER_IMG);
         playerSub.setX(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2);
         TranslateTransition playerIn = new TranslateTransition();
-        playerIn.setDuration(Duration.seconds(1.5));
+        playerIn.setDuration(duration);
         playerIn.setFromY(WINDOW_HEIGHT+100);
         playerIn.setToY(WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2);
         playerIn.setOnFinished(e -> {
@@ -239,6 +256,13 @@ public class GameMechanics {
         });
         playerIn.setNode(playerSub);
         playerIn.play();
+
+        PauseTransition p = new PauseTransition();
+        p.setDuration(duration.divide(5));
+        p.setOnFinished(e -> s.play());
+        p.play();
+
+        root.getChildren().add(hudAnimate);
         root.getChildren().add(playerSub);
     }
 

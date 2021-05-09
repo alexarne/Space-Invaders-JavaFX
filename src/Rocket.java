@@ -41,6 +41,7 @@ public class Rocket extends Sprite {
     public void explode() {
         exploding = true;
         explosionStep = -1;
+        this.healthCurrent = 0;
     }
 
     public void drawExplode(GraphicsContext gc) {
