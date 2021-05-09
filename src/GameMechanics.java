@@ -29,6 +29,7 @@ public class GameMechanics {
     private boolean playerMoveLeft;
     private boolean playerMoveRight;
     private boolean playerShoot;
+    private boolean playerReload;
 
     // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
@@ -74,6 +75,8 @@ public class GameMechanics {
     private Text buttonQuit;
     private Text buttonRetry;
     private Text buttonNext;
+
+    private Timeline timeline;
 
     private double updateFrequency;
 
@@ -145,6 +148,7 @@ public class GameMechanics {
             fade.setOnFinished(f -> {
                 Scene mainScene = main.getMainScene();
                 window.setScene(mainScene);
+                timeline.stop();
             });
             root.getChildren().add(r);
             fade.play();
@@ -196,7 +200,7 @@ public class GameMechanics {
      * Starts running the game.
      */
     public void startGame() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(updateFrequency), e -> run()));
+        timeline = new Timeline(new KeyFrame(Duration.millis(updateFrequency), e -> run()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -209,11 +213,13 @@ public class GameMechanics {
             if (e.getCode() == KeyCode.A) playerMoveLeft = true;
             if (e.getCode() == KeyCode.D) playerMoveRight = true;
             if (e.getCode() == KeyCode.SPACE) playerShoot = true;
+            if (e.getCode() == KeyCode.R) playerReload = true;
         });
         gameScene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.A) playerMoveLeft = false;
             if (e.getCode() == KeyCode.D) playerMoveRight = false;
             if (e.getCode() == KeyCode.SPACE) playerShoot = false;
+            if (e.getCode() == KeyCode.R) playerReload = false;
         });
     }
 
@@ -246,21 +252,9 @@ public class GameMechanics {
         player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, sA, dP);
 
         // Load enemies according to level: //TODO
-        amountOfEnemies = 20;
-        enemiesLoad = new Enemy[amountOfEnemies];
-        for (int i = 0; i < amountOfEnemies; i++) {
-            // Read text file and assign values accordingly //TODO
-            int n = 1 + rnd.nextInt(3);
-            Image img = new Image("Assets/Images/enemyrocket" + n + ".png");
-            double x = rnd.nextInt(WINDOW_WIDTH - (int) img.getWidth());
-            double y = - (int) img.getHeight();
-            double v = 1;
-            int hp = 100;
-            boolean s = true;
-            boolean b = false;
-            int dE = 30;
-            enemiesLoad[i] = new Enemy(x, y, v, img, hp, s, b, 0.003, dE, gameBgColor);
-        }
+        LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
+        enemiesLoad = levelLoader.getEnemies(2);
+        amountOfEnemies = levelLoader.getAmountOfEnemies();
         spawnProbability = 0.01;
         enemiesLoaded = 0;
 
@@ -381,6 +375,9 @@ public class GameMechanics {
                     }
                 }
             }
+            if (playerReload && !player.reloading) {
+                player.reload();
+            }
             player.draw(gc);
         }
     }
@@ -414,7 +411,7 @@ public class GameMechanics {
             if (shot.hasCollided(enemy)) {
                 enemy.hit(shot);
                 playerDeadShots.add(shot);
-                if (enemy.health == 0) {
+                if (enemy.healthCurrent == 0) {
                     explosions.add(enemy);
                     deadEnemies.add(enemy);
                     player.updateScore();
@@ -606,13 +603,13 @@ public class GameMechanics {
         gc.fillRect(11, WINDOW_HEIGHT-21, 150, 10);
 
         gc.setFill(hpColor);
-        gc.fillRect(11, WINDOW_HEIGHT-21, 150*player.health/100, 10);
+        gc.fillRect(11, WINDOW_HEIGHT-21, 150*player.healthCurrent/player.healthMax, 10);
 
         // HP icon
         gc.drawImage(HP_IMG, 10, WINDOW_HEIGHT-43);
         gc.setFont(Font.font("Verdana", 17.5));
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.valueOf(player.health), 29, WINDOW_HEIGHT-29);
+        gc.fillText(String.valueOf(player.healthCurrent), 29, WINDOW_HEIGHT-29);
     }
 
     private void renderAmmo() {

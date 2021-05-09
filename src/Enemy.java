@@ -19,9 +19,9 @@ public class Enemy extends Rocket {
      * @param img Image.
      * @param health Health.
      * @param ableToShoot Is able to shoot or not.
-     * @param boss Is boss or not.
+     * @param isBoss Is boss or not.
      */
-    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot, boolean boss, double shootingProbability, int damage, Color bgColor) {
+    public Enemy(double posX, double posY, double velocity, Image img, int health, boolean ableToShoot, boolean isBoss, double shootingProbability, int damage, Color bgColor) {
         super(posX, posY, (int) img.getHeight(), (int) img.getWidth(), velocity, img, health, damage);
         this.ableToShoot = ableToShoot;
         this.cooldown = 200;
@@ -47,7 +47,7 @@ public class Enemy extends Rocket {
             gc.setFill(bgColor);
             gc.fillRect(posX+1, posY-4-4+1, width-2, 4-2);
             gc.setFill(hpColor);
-            gc.fillRect(posX+1, posY-4-4+1, (width-2)*health/100, 4-2);
+            gc.fillRect(posX+1, posY-4-4+1, (width-2)*healthCurrent/healthMax, 4-2);
         }
     }
 
@@ -86,10 +86,10 @@ public class Enemy extends Rocket {
      * What to do when the enemy is damaged.
      */
     public void hit(Shot shot) {
-        if (health - shot.damage > 0) {
-            health -= shot.damage;
+        if (healthCurrent - shot.damage > 0) {
+            healthCurrent -= shot.damage;
         } else {
-            health = 0;
+            healthCurrent = 0;
             explode();
         }
     }

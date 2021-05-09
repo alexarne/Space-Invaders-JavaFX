@@ -105,12 +105,11 @@ public class Player extends Rocket {
      * @return An array of bullets if allowed, null if still on cooldown.
      */
     public Shot[] shoot() {
-        if (cooldownTracker <= 0 && ammunitionCurrent > 0) {
+        if (cooldownTracker <= 0 && ammunitionCurrent > 0 && !reloading) {
             cooldownTracker = cooldown;
             ammunitionCurrent--;
             if (ammunitionCurrent <= 0) {
-                reloading = true;
-                reloadTimeCurrent = reloadTimeMax;
+                reload();
             }
 
             int amountOfBullets = 1;
@@ -133,11 +132,16 @@ public class Player extends Rocket {
      * What to do when the player is damaged.
      */
     public void hit(Shot shot) {
-        if (health - shot.damage > 0) {
-            health -= shot.damage;
+        if (healthCurrent - shot.damage > 0) {
+            healthCurrent -= shot.damage;
         } else {
-            health = 0;
+            healthCurrent = 0;
             explode();
         }
+    }
+
+    public void reload() {
+        reloading = true;
+        reloadTimeCurrent = reloadTimeMax;
     }
 }
