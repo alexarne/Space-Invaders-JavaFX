@@ -1,4 +1,4 @@
-// First number specifies the level number and marks the beginning of a level configuration.
+// First line specifies the level number and marks the beginning of a level configuration.
 // The second number specifies the amount of enemies for that level which must exactly correspond to the amount of enemies specified after that.
 // Enemies are spawned in the order they appear in the level configuration.
 // A line starting with "enemy" marks an enemy configuration and follows the format:
@@ -14,13 +14,38 @@
 // isBoss is a boolean true/false value which specifies if the enemy is a boss or not.
 // shootingProbability is a double which specifies the probability that the enemy shoots
 // damage is a positive integer which specifies how much damage a single shot from the enemy does.
-// A dash at the beginning of a line marks the end of a level configuration.
+// A single dash at the beginning of a line marks the end of a level configuration.
 
 
 
-1
-20
-enemy imageNumber velocity hp ableToShoot isBoss shootingProbability damage
+level 1
+6
+enemy 1 1 1 true false 0.003 10
+enemy 1 1 100 true false 0.003 10
+enemy 1 1 1 true false 0.003 10
+enemy 1 1 100 true false 0.003 10
+enemy 1 1 1 true false 0.003 10
+enemy 1 1 100 true false 0.003 10
 -
 
 
+level 2
+6
+enemy 2 1 1 true false 0.003 10
+enemy 2 1 100 true false 0.003 10
+enemy 2 1 1 true false 0.003 10
+enemy 2 1 100 true false 0.003 10
+enemy 2 1 1 true false 0.003 10
+enemy 2 1 100 true false 0.003 10
+-
+
+
+level 3
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
