@@ -48,8 +48,8 @@ public class GameMechanics {
 
     private Color hpColor;
     private Color ammoColor;
-    private Color gameoverColor;
-    private Color gameoverColorHover;
+    private Color gameOverColor;
+    private Color gameOverColorHover;
 
     private LinkedList<Star> stars;
     private LinkedList<Star> deadStars;
@@ -104,8 +104,8 @@ public class GameMechanics {
     public void load() {
         this.hpColor = Color.rgb(64, 221, 61);
         this.ammoColor = Color.rgb(217, 151, 52);
-        this.gameoverColor = Color.rgb(212, 72, 51);
-        this.gameoverColorHover = Color.rgb(255, 135, 117);
+        this.gameOverColor = Color.rgb(212, 72, 51);
+        this.gameOverColorHover = Color.rgb(255, 135, 117);
 
         this.rnd = new Random();
         playerInPosition = false;
@@ -124,7 +124,25 @@ public class GameMechanics {
         Duration duration = Duration.millis(300);
         Interpolator interp = Interpolator.EASE_OUT;
 
-        buttonQuit = makeGameoverButton("Quit");
+        buttonQuit = makeGameOverButton("Quit");
+        handleQuitButton(main, duration, interp);
+        buttonRetry = makeGameOverButton("Try Again");
+        handleTryAgainButton(main, duration, interp);
+        buttonNext = makeGameOverButton("Next Level");
+    }
+
+    private Text makeGameOverButton(String s) {
+        Text button = new Text(s);
+        button.setTextAlignment(TextAlignment.CENTER);
+        button.setFont(Font.font("Sitka Small", 24));
+        button.setFill(gameOverColor);
+        button.setX(WINDOW_WIDTH / 2 - button.getLayoutBounds().getWidth() / 2);
+        button.setOnMouseEntered(e -> button.setFill(gameOverColorHover));
+        button.setOnMouseExited(e -> button.setFill(gameOverColor));
+        return button;
+    }
+
+    private void handleQuitButton(Main main, Duration duration, Interpolator interp) {
         buttonQuit.setOnMouseReleased(e -> {
             main.animateButton(buttonQuit, true, duration, interp);
             main.animateButton(buttonRetry, false, duration, interp);
@@ -149,7 +167,9 @@ public class GameMechanics {
             fade.play();
             main.mainMenu(window);
         });
-        buttonRetry = makeGameoverButton("Try Again");
+    }
+
+    private void handleTryAgainButton(Main main, Duration duration, Interpolator interp) {
         buttonRetry.setOnMouseReleased(e -> {
             main.animateButton(buttonRetry, true, duration, interp);
             main.animateButton(buttonRetry, false, duration, interp);
@@ -176,19 +196,6 @@ public class GameMechanics {
             fade.play();
             gameMechanics.animatePlayerIn();
         });
-        buttonNext = makeGameoverButton("Next Level");
-
-    }
-
-    private Text makeGameoverButton(String s) {
-        Text button = new Text(s);
-        button.setTextAlignment(TextAlignment.CENTER);
-        button.setFont(Font.font("Sitka Small", 24));
-        button.setFill(gameoverColor);
-        button.setX(WINDOW_WIDTH / 2 - button.getLayoutBounds().getWidth() / 2);
-        button.setOnMouseEntered(e -> button.setFill(gameoverColorHover));
-        button.setOnMouseExited(e -> button.setFill(gameoverColor));
-        return button;
     }
 
     /**
@@ -443,7 +450,7 @@ public class GameMechanics {
     private void handleGameOverIfPlayerDead() {
         if (player.dead) {
             gc.setFont(Font.font("Sitka Small", 40));
-            gc.setFill(gameoverColor);
+            gc.setFill(gameOverColor);
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText("Game Over", WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
             gc.setFont(Font.font("Sitka Small", 24));
@@ -462,7 +469,7 @@ public class GameMechanics {
         // TODO: Make it so that the text "Click here" leads to a new level.
         if (allEnemiesLoadedAndAllAreDead() && !player.exploding) {
             gc.setFont(Font.font("Sitka Small", 40));
-            gc.setFill(gameoverColor);
+            gc.setFill(gameOverColor);
             gc.setTextAlign(TextAlignment.CENTER);
             gc.fillText("Level Completed",
                     WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
