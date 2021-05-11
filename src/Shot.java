@@ -43,12 +43,6 @@ public class Shot extends Sprite {
         update();
         gc.setFill(Color.ORANGE);
         gc.fillRect(this.posX, this.posY, this.width, this.height);
-        // TODO: Change once we've fixed inventory.
-//        if (score >= 60 && score <= 80 || score >= 150) {
-//            upgradeWeapon(gc);
-//        } else {
-//            shootNormalBullets(gc);
-//        }
     }
 
     // TODO: Add method that handles collisions.
