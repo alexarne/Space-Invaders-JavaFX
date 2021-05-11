@@ -112,20 +112,25 @@ public class Player extends Rocket {
                 reload();
             }
 
-            int amountOfBullets = 1;
-            Shot[] s = new Shot[amountOfBullets];
-            int bulletVelocity = - 4;
-            int h = 16;
-            int w = 2;
-            double x = posX + width / 2 - w / 2;
-            double y = posY - h + 6;
-            for (int i = 0; i < amountOfBullets; i++) {
-                s[i] = new Shot(x, y, origin, h, w, bulletVelocity, damage);
-            }
+            Shot[] s = getShots();
             return s;
         } else {
             return null;
         }
+    }
+
+    private Shot[] getShots() {
+        int amountOfBullets = 1;
+        Shot[] s = new Shot[amountOfBullets];
+        int bulletVelocity = - 4;
+        int h = 16;
+        int w = 2;
+        double x = posX + width / 2 - w / 2;
+        double y = posY - h + 6;
+        for (int i = 0; i < amountOfBullets; i++) {
+            s[i] = new Shot(x, y, origin, h, w, bulletVelocity, damage);
+        }
+        return s;
     }
 
     /**
