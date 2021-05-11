@@ -282,7 +282,6 @@ public class GameMechanics {
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         showPlayerScoreDuringGameplay();
-        showAmountOfEnemiesLeft(); // see the methods comment below
 
         calculateFPS();
 
@@ -325,15 +324,6 @@ public class GameMechanics {
         gc.setFont(Font.font(20));
         gc.setFill(Color.YELLOW);
         gc.fillText("Score: " + player.getScore(), 10,  20);
-    }
-
-    // TODO: Implement idea or discard it.
-    private void showAmountOfEnemiesLeft() {
-        gc.setTextAlign(TextAlignment.RIGHT);
-        gc.setFont(Font.font(20));
-        gc.setFill(Color.YELLOW);
-        int amountLeft = 0;
-        gc.fillText("Enemies left: " + amountLeft, 500,  20);
     }
 
     private void calculateFPS() {
