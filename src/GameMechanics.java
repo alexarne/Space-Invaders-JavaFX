@@ -71,7 +71,7 @@ public class GameMechanics {
     private LinkedList<Long> fpsArr;
     private int fpsSample;
 
-    private boolean gameoverDisplayed;
+    private boolean gameOverDisplayed;
     private Text buttonQuit;
     private Text buttonRetry;
     private Text buttonNext;
@@ -84,7 +84,7 @@ public class GameMechanics {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
-        this.gameoverDisplayed = false;
+        this.gameOverDisplayed = false;
         this.window = window;
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
@@ -454,11 +454,11 @@ public class GameMechanics {
             gc.setFont(Font.font("Sitka Small", 24));
             gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
 
-            if (!gameoverDisplayed) {
+            if (!gameOverDisplayed) {
                 buttonRetry.setY(WINDOW_HEIGHT/3 + 120);
                 buttonQuit.setY(WINDOW_HEIGHT/3 + 160);
                 root.getChildren().addAll(buttonRetry, buttonQuit);
-                gameoverDisplayed = true;
+                gameOverDisplayed = true;
             }
         }
     }
@@ -474,12 +474,12 @@ public class GameMechanics {
             gc.setFont(Font.font("Sitka Small", 24));
             gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
 
-            if (!gameoverDisplayed) {
+            if (!gameOverDisplayed) {
                 buttonNext.setY(WINDOW_HEIGHT/3 + 120);
                 buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
                 buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
                 root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
-                gameoverDisplayed = true;
+                gameOverDisplayed = true;
             }
         }
     }
