@@ -37,11 +37,6 @@ public class GameMechanics {
     static final Image AMMO_IMG = new Image("Assets/Images/ammo_icon.png");
     private boolean playerInPosition;
 
-    // Shots
-    private double mouseX;
-    final int MAX_BULLETS = 20;
-    boolean gameOver = false;
-
     // Enemies
     private Enemy[] enemiesLoad;
     private int amountOfEnemies;
@@ -313,7 +308,7 @@ public class GameMechanics {
         // Game state
         handleGameOverIfPlayerDead();
         handleGameWonIfAllEnemiesDead();
-      
+
         renderHUD();
 
         // TODO check if player score is worthy of an achievement
