@@ -30,6 +30,7 @@ public class GameMechanics {
     private boolean playerMoveRight;
     private boolean playerShoot;
     private boolean playerReload;
+    private boolean playerESC;
 
     // Player
     static final Image PLAYER_IMG = new Image("Assets/Images/rocketclean64.png");
@@ -81,12 +82,13 @@ public class GameMechanics {
 
     private double updateFrequency;
 
-    public GameMechanics(int width, int height, Stage window, Color color) {
+    public GameMechanics(int width, int height, Stage window, Color color, Random rnd) {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
         this.gameoverDisplayed = false;
         this.window = window;
+        this.rnd = rnd;
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         root = new Pane(canvas);
@@ -113,12 +115,12 @@ public class GameMechanics {
         this.gameoverColor = Color.rgb(212, 72, 51);
         this.gameoverColorHover = Color.rgb(255, 135, 117);
 
-        this.rnd = new Random();
         playerInPosition = false;
 
         playerMoveLeft = false;
         playerMoveRight = false;
         playerShoot = false;
+        playerESC = false;
         handleUserInputs();
 
         prepareButtons();
@@ -161,7 +163,7 @@ public class GameMechanics {
             main.animateButton(buttonRetry, false, duration, interp);
             main.animateButton(buttonNext, false, duration, interp);
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor);
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd);
             Rectangle r = new Rectangle();
             r.setFill(gameBgColor);
             r.setWidth(WINDOW_WIDTH);
@@ -215,6 +217,9 @@ public class GameMechanics {
             if (e.getCode() == KeyCode.D) playerMoveRight = true;
             if (e.getCode() == KeyCode.SPACE) playerShoot = true;
             if (e.getCode() == KeyCode.R) playerReload = true;
+            if (e.getCode() == KeyCode.ESCAPE) {
+                if (playerInPosition && !gameoverDisplayed) toggleESC();
+            }
         });
         gameScene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.A) playerMoveLeft = false;
@@ -222,6 +227,16 @@ public class GameMechanics {
             if (e.getCode() == KeyCode.SPACE) playerShoot = false;
             if (e.getCode() == KeyCode.R) playerReload = false;
         });
+    }
+
+    private void toggleESC() {
+        if (playerESC) {
+            playerESC = false;
+            timeline.play();
+        } else {
+            playerESC = true;
+            timeline.pause();
+        }
     }
 
     /**

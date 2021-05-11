@@ -13,6 +13,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -21,6 +22,8 @@ public class Main extends Application {
     Stage window;
     Scene mainScene, gameScene;
     private Color gameBgColor = Color.grayRgb(20);
+    private Random rnd;
+    private Group root;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -61,7 +64,9 @@ public class Main extends Application {
      * Load the Main Menu.
      */
     public void mainMenu() {
-        Group root = new Group();
+        this.rnd = new Random();
+
+        root = new Group();
         mainScene = new Scene(root);
 
         Rectangle bg = getBackground();
@@ -149,7 +154,8 @@ public class Main extends Application {
         Rectangle bg = new Rectangle();
         bg.setHeight(WINDOW_HEIGHT);
         bg.setWidth(WINDOW_WIDTH);
-        bg.setFill(Color.WHITE);
+        bg.setFill(gameBgColor);
+        bg.setOpacity(0);
         return bg;
     }
 
@@ -183,6 +189,31 @@ public class Main extends Application {
 
     // Animate on button press and take to game.
     private void handleStartGame(Rectangle bg, Text menuText, Text startGame, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
+        int totalW = 100*3 + 30*2;
+        int begin = WINDOW_WIDTH/2 - totalW/2;
+        int next = 130;
+        Rectangle level1 = new Rectangle();
+        level1.setFill(Color.BLACK);
+        level1.setWidth(100);
+        level1.setHeight(100);
+        level1.setX(begin);
+        level1.setY(150);
+        root.getChildren().add(level1);
+        Rectangle level2 = new Rectangle();
+        level2.setFill(Color.BLACK);
+        level2.setWidth(100);
+        level2.setHeight(100);
+        level2.setX(begin+next);
+        level2.setY(150);
+        root.getChildren().add(level2);
+        Rectangle level3 = new Rectangle();
+        level3.setFill(Color.BLACK);
+        level3.setWidth(100);
+        level3.setHeight(100);
+        level3.setX(begin+next*2);
+        level3.setY(150);
+        root.getChildren().add(level3);
+
         startGame.setOnMouseReleased(mouseEvent -> {
             // Animate the button
             animateButton(startGame, true, animationDuration, interp);
@@ -192,22 +223,30 @@ public class Main extends Application {
             }
             transitionFade(menuText, animationDuration, interp);
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor);
-            FillTransition transitionBackground = new FillTransition();
-            transitionBackground.setDuration(Duration.millis(300));
-            transitionBackground.setToValue(gameBgColor);
-            transitionBackground.setShape(bg);
-            transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
-            transitionBackground.setOnFinished(e -> {
-                gameMechanics.load();
-                gameScene = gameMechanics.getGameScene();
-                window.setScene(gameScene);
-                gameMechanics.startGame();
-            }); // switches to game scene
-            transitionBackground.play();
+            // Introduce level selection
+            LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
 
-            gameMechanics.animatePlayerIn();
+
+            beginGame(bg);
         });
+    }
+
+    private void beginGame(Rectangle bg) {
+        GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd);
+        FadeTransition transitionBackground = new FadeTransition();
+        transitionBackground.setDuration(Duration.millis(300));
+        transitionBackground.setToValue(1);
+        transitionBackground.setNode(bg);
+        transitionBackground.setInterpolator(Interpolator.EASE_BOTH);
+        transitionBackground.setOnFinished(e -> {
+            gameMechanics.load();
+            gameScene = gameMechanics.getGameScene();
+            window.setScene(gameScene);
+            gameMechanics.startGame();
+        }); // switches to game scene
+        transitionBackground.play();
+
+        gameMechanics.animatePlayerIn();
     }
 
     private void handleHighscore(Text highscore, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
