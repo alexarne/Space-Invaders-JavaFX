@@ -20,9 +20,9 @@
 
 level 1
 6
-enemy 1 1 1 true false 0.003 10
-enemy 1 1 100 true false 0.003 10
-enemy 1 1 1 true false 0.003 10
+enemy 1 1 1 true false 0.003 100
+enemy 1 1 100 true false 0.003 100
+enemy 1 1 1 true false 0.003 100
 enemy 1 1 100 true false 0.003 10
 enemy 1 1 1 true false 0.003 10
 enemy 1 1 100 true false 0.003 10
