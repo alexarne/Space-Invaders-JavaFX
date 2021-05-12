@@ -1,6 +1,8 @@
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -207,19 +209,21 @@ public class Main extends Application {
 
             // Introduce level selection
             LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
-            PauseTransition p = new PauseTransition();
-            p.setDuration(Duration.millis(100));
-            p.play();
+            PauseTransition[] p = new PauseTransition[]{
+                    new PauseTransition()
+            };
+            p[0].setDuration(Duration.millis(100));
+            p[0].play();
             int levelsPerRow = 3;
-            PauseTransition pUpper = p;
+            PauseTransition pUpper = p[0];
             for (int i = 1; i <= levelLoader.getAmountOfLevels(); i++) {
-                p = createLevelButton(i, p, bgFade, levelLoader, pUpper, levelsPerRow);
-                if (i % levelsPerRow == 1) pUpper = p;
+                p = createLevelButton(i, p[0], bgFade, levelLoader, pUpper, levelsPerRow);
+                if (i % levelsPerRow == 1) pUpper = p[1];
             }
         });
     }
 
-    private PauseTransition createLevelButton(int level, PauseTransition pPrev, Rectangle bgFade, LevelLoader levelLoader, PauseTransition pUpper, int levelsPerRow) {
+    private PauseTransition[] createLevelButton(int level, PauseTransition pPrev, Rectangle bgFade, LevelLoader levelLoader, PauseTransition pUpper, int levelsPerRow) {
         double w = 80;
         double h = 80;
         int margin = 16;
@@ -286,23 +290,43 @@ public class Main extends Application {
         });
         marker.setOnMouseClicked(e -> beginGame(bgFade, levelLoader, level));
 
-//        // Doesn't work even tho it should idk gonna fix some other time, used to stagger diagonally instead of linearly
-//        if (level % levelsPerRow == 1) {
-//            pPrev = pUpper;
-//        }
+        int millis2 = 50;
+        PauseTransition[] p2;
+        if (level % levelsPerRow == 1) {
+            p2 = new PauseTransition[]{
+                    new PauseTransition(Duration.millis(millis2)),
+                    new PauseTransition(Duration.millis(millis2))
+            };
+        } else {
+            p2 = new PauseTransition[]{
+                    new PauseTransition(Duration.millis(millis2))
+            };
+        }
 
-        PauseTransition p2 = new PauseTransition();
-        p2.setDuration(Duration.millis(50));
+        // Doesn't work even tho it should idk gonna fix some other time, used to stagger diagonally instead of linearly
+        if (level % levelsPerRow == 1) {
+            pUpper.setOnFinished(e -> {
+                pUpper.getOnFinished();
+                animateLevelIn(outRect, inRect, label, marker);
+                root.getChildren().add(outRect);
+                root.getChildren().add(inRect);
+                root.getChildren().add(label);
+                root.getChildren().add(marker);
+                p2[0].play();
+                p2[1].play();
+            });
+        } else {
+            pPrev.setOnFinished(e -> {
+                animateLevelIn(outRect, inRect, label, marker);
+                root.getChildren().add(outRect);
+                root.getChildren().add(inRect);
+                root.getChildren().add(label);
+                root.getChildren().add(marker);
+                p2[0].play();
+            });
+        }
 
-        pPrev.setOnFinished(e -> {
-            animateLevelIn(outRect, inRect, label, marker);
-            root.getChildren().add(outRect);
-            root.getChildren().add(inRect);
-            root.getChildren().add(label);
-            root.getChildren().add(marker);
-            p2.play();
-        });
-
+        // Return array of pause transitions, 2 each, one for downwards and one for rightwards to enable one pausetransition to play two other transitions
         return p2;
     }
 
