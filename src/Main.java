@@ -1,9 +1,6 @@
 
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -28,6 +25,8 @@ public class Main extends Application {
     private Color gameBgColor = Color.grayRgb(20);
     private Random rnd;
     private Pane root;
+
+    private boolean levelsLoaded;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -193,6 +192,7 @@ public class Main extends Application {
     // Animate on button press and take to game.
     private void handleStartGame(Rectangle bg, Text menuText, Text startGame, ArrayList<Text> textArr, Duration animationDuration, Interpolator interp) {
         startGame.setOnMouseClicked(mouseEvent -> {
+            this.levelsLoaded = false;
             // Animate the button
             animateButtonOut(startGame, true, animationDuration, interp, root);
             // Animate the other buttons
@@ -219,6 +219,8 @@ public class Main extends Application {
             for (int i = 1; i <= levelLoader.getAmountOfLevels(); i++) {
                 p = createLevelButton(i, p[0], bgFade, levelLoader, pUpper, levelsPerRow);
                 if (i % levelsPerRow == 1) pUpper = p[1];
+                // Prohibit user from selecting a level before all levels have been added to root in order to circumvent bug
+                if (i == levelLoader.getAmountOfLevels()) p[0].setOnFinished(e -> this.levelsLoaded = true);
             }
         });
     }
@@ -230,10 +232,14 @@ public class Main extends Application {
         int border = 2;
         double totalW = w*levelsPerRow + margin*(levelsPerRow-1);
         double startX = WINDOW_WIDTH/2 - totalW/2;
-        int startY = 160;
+        int startY = 180;
 
         double xSteps = (w + margin) * ((level - 1) % levelsPerRow);
         double ySteps = (h + margin) * ((level - 1) / levelsPerRow);
+
+        if (level == 1) { // I want access the pretty variables
+            
+        }
 
         Rectangle outRect = new Rectangle();
         outRect.setWidth(w);
@@ -257,7 +263,6 @@ public class Main extends Application {
         marker.setOpacity(0);
         marker.setX(startX + xSteps);
         marker.setY(startY + ySteps);
-
         int millis = 250;
         double scaleIn = (w+margin)/w;
         ScaleTransition zoomIn1 = getScaleTransition(outRect, millis, scaleIn);
@@ -288,7 +293,9 @@ public class Main extends Application {
             zoomOut3.play();
             zoomOut4.play();
         });
-        marker.setOnMouseClicked(e -> beginGame(bgFade, levelLoader, level));
+        marker.setOnMouseClicked(e -> {
+            if (levelsLoaded) beginGame(bgFade, levelLoader, level);
+        });
 
         int millis2 = 50;
         PauseTransition[] p2;
