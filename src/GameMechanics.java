@@ -225,7 +225,7 @@ public class GameMechanics {
             if (e.getCode() == KeyCode.SPACE) playerShoot = true;
             if (e.getCode() == KeyCode.R) playerReload = true;
             if (e.getCode() == KeyCode.ESCAPE) {
-                if (playerInPosition && !gameoverDisplayed) toggleESC();
+                if (playerInPosition && !gameOverDisplayed) toggleESC();
             }
         });
         gameScene.setOnKeyReleased(e -> {
