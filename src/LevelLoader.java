@@ -70,7 +70,7 @@ public class LevelLoader {
                     }
                 }
                 if (foundLevel && levelConfigured) {
-                    System.out.println("Level found and configured.");
+                    System.out.println("Level " + num + " found and configured.");
                     reading = false;
                 }
             }

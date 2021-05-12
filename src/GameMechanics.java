@@ -80,15 +80,20 @@ public class GameMechanics {
 
     private Timeline timeline;
 
+    private LevelLoader levelLoader;
+    private int thisLevel;
+
     private double updateFrequency;
 
-    public GameMechanics(int width, int height, Stage window, Color color, Random rnd) {
+    public GameMechanics(int width, int height, Stage window, Color color, Random rnd, LevelLoader levelLoader, int thisLevel) {
         this.WINDOW_WIDTH = width;
         this.WINDOW_HEIGHT = height;
         this.gameBgColor = color;
         this.gameoverDisplayed = false;
         this.window = window;
         this.rnd = rnd;
+        this.levelLoader = levelLoader;
+        this.thisLevel = thisLevel;
         Canvas canvas = new Canvas(WINDOW_WIDTH, WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         root = new Pane(canvas);
@@ -134,9 +139,9 @@ public class GameMechanics {
 
         buttonQuit = makeGameoverButton("Quit");
         buttonQuit.setOnMouseReleased(e -> {
-            main.animateButton(buttonQuit, true, duration, interp);
-            main.animateButton(buttonRetry, false, duration, interp);
-            main.animateButton(buttonNext, false, duration, interp);
+            main.animateButtonOut(buttonQuit, true, duration, interp, root);
+            main.animateButtonOut(buttonRetry, false, duration, interp, root);
+            main.animateButtonOut(buttonNext, false, duration, interp, root);
 
             Rectangle r = new Rectangle();
             r.setFill(Color.WHITE);
@@ -159,11 +164,11 @@ public class GameMechanics {
         });
         buttonRetry = makeGameoverButton("Try Again");
         buttonRetry.setOnMouseReleased(e -> {
-            main.animateButton(buttonRetry, true, duration, interp);
-            main.animateButton(buttonRetry, false, duration, interp);
-            main.animateButton(buttonNext, false, duration, interp);
+            main.animateButtonOut(buttonRetry, true, duration, interp, root);
+            main.animateButtonOut(buttonRetry, false, duration, interp, root);
+            main.animateButtonOut(buttonNext, false, duration, interp, root);
 
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd);
+            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd, levelLoader, thisLevel);
             Rectangle r = new Rectangle();
             r.setFill(gameBgColor);
             r.setWidth(WINDOW_WIDTH);
@@ -290,9 +295,8 @@ public class GameMechanics {
         int dP = 40;
         player = new Player(WINDOW_WIDTH / 2 - PLAYER_IMG.getWidth()/2, WINDOW_HEIGHT - PLAYER_IMG.getHeight()*2, (int) PLAYER_IMG.getHeight(), (int) PLAYER_IMG.getWidth(), 2, PLAYER_IMG, 100, WINDOW_WIDTH, sA, dP);
 
-        // Load enemies according to level: //TODO
-        LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
-        enemiesLoad = levelLoader.getEnemies(2);
+        // levelLoader;
+        enemiesLoad = levelLoader.getEnemies(thisLevel);
         amountOfEnemies = levelLoader.getAmountOfEnemies();
         spawnProbability = 0.01;
         enemiesLoaded = 0;
