@@ -137,6 +137,16 @@ public class GameMechanics {
         buttonRetry = makeGameOverButton("Try Again");
         handleTryAgainButton(main, duration, interp);
         buttonNext = makeGameOverButton("Next Level");
+        handleNextLevelButton(main, duration, interp);
+    }
+
+    private void handleNextLevelButton(Main main, Duration duration, Interpolator interp) {
+        buttonNext.setOnMouseReleased(e -> {
+            main.animateButtonOut(buttonQuit, false, duration, interp, root);
+            main.animateButtonOut(buttonRetry, false, duration, interp, root);
+            main.animateButtonOut(buttonNext, true, duration, interp, root);
+            startNewGame(thisLevel + 1);
+        });
     }
 
     private Text makeGameOverButton(String s) {
@@ -182,28 +192,35 @@ public class GameMechanics {
             main.animateButtonOut(buttonRetry, true, duration, interp, root);
             main.animateButtonOut(buttonRetry, false, duration, interp, root);
             main.animateButtonOut(buttonNext, false, duration, interp, root);
-
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd, levelLoader, thisLevel);
-            Rectangle r = new Rectangle();
-            r.setFill(gameBgColor);
-            r.setWidth(WINDOW_WIDTH);
-            r.setHeight(WINDOW_HEIGHT);
-            r.setOpacity(0);
-            FadeTransition fade = new FadeTransition();
-            fade.setDuration(duration);
-            fade.setToValue(1);
-            fade.setNode(r);
-            fade.setInterpolator(interp);
-            fade.setOnFinished(f -> {
-                gameMechanics.load();
-                Scene game = gameMechanics.getGameScene();
-                window.setScene(game);
-                gameMechanics.startGame();
-            });
-            root.getChildren().add(r);
-            fade.play();
-            gameMechanics.animatePlayerIn();
+            startNewGame(thisLevel);
         });
+    }
+
+    private void startNewGame(int level) {
+        Duration duration = Duration.millis(300);
+        Interpolator interp = Interpolator.EASE_OUT;
+        GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd, levelLoader, level);
+
+        Rectangle r = new Rectangle();
+        r.setFill(gameBgColor);
+        r.setWidth(WINDOW_WIDTH);
+        r.setHeight(WINDOW_HEIGHT);
+        r.setOpacity(0);
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(duration);
+        fade.setToValue(1);
+        fade.setNode(r);
+        fade.setInterpolator(interp);
+        fade.setOnFinished(f -> {
+            gameMechanics.load();
+            Scene game = gameMechanics.getGameScene();
+            window.setScene(game);
+            gameMechanics.startGame();
+            timeline.stop();
+        });
+        root.getChildren().add(r);
+        fade.play();
+        gameMechanics.animatePlayerIn();
     }
 
     /**
@@ -520,10 +537,16 @@ public class GameMechanics {
             gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
 
             if (!gameOverDisplayed) {
-                buttonNext.setY(WINDOW_HEIGHT/3 + 120);
-                buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
-                buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
-                root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
+                if (thisLevel < levelLoader.getAmountOfLevels()) {
+                    buttonNext.setY(WINDOW_HEIGHT/3 + 120);
+                    buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
+                    buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
+                    root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
+                } else {
+                    buttonRetry.setY(WINDOW_HEIGHT/3 + 120);
+                    buttonQuit.setY(WINDOW_HEIGHT/3 + 160);
+                    root.getChildren().addAll(buttonRetry, buttonQuit);
+                }
                 gameOverDisplayed = true;
             }
         }
