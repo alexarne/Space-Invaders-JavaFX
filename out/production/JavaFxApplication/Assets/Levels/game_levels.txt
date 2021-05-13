@@ -8,7 +8,7 @@
 // 	"enemyrocket2.png" = 2
 // 	"enemyrocket3.png" = 3
 // All images for enemy rockets must begin with "enemyrocket", then have their imageNumber and end with ".png".
-// velocity is a positive double which specifies how fast the enemy will move.
+// velocity is a positive integer which specifies how fast the enemy will move.
 // hp is a positive integer which specifies the health of the enemy.
 // ableToShoot is a boolean true/false value which specifies whether or not the enemy will be able to shoot.
 // isBoss is a boolean true/false value which specifies if the enemy is a boss or not.
@@ -20,9 +20,9 @@
 
 level 1
 6
-enemy 1 1 1 true false 0.003 10
-enemy 3 1 100 true false 0.003 10
-enemy 1 1 1 true false 0.003 10
+enemy 1 1 1 true false 0.003 100
+enemy 1 1 100 true false 0.003 100
+enemy 1 1 1 true false 0.003 100
 enemy 1 1 100 true false 0.003 10
 enemy 1 1 1 true false 0.003 10
 enemy 1 1 100 true false 0.003 10
@@ -84,6 +84,72 @@ enemy 3 1 100 true false 0.003 10
 
 
 level 7
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 8
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 9
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 10
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 11
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 12
+6
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+enemy 3 1 1 true false 0.003 10
+enemy 3 1 100 true false 0.003 10
+-
+
+
+level 13
 6
 enemy 3 1 1 true false 0.003 10
 enemy 3 1 100 true false 0.003 10
