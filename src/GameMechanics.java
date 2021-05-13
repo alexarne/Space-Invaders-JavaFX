@@ -137,6 +137,16 @@ public class GameMechanics {
         buttonRetry = makeGameOverButton("Try Again");
         handleTryAgainButton(main, duration, interp);
         buttonNext = makeGameOverButton("Next Level");
+        handleNextLevelButton(main, duration, interp);
+    }
+
+    private void handleNextLevelButton(Main main, Duration duration, Interpolator interp) {
+        buttonNext.setOnMouseReleased(e -> {
+            main.animateButtonOut(buttonQuit, false, duration, interp, root);
+            main.animateButtonOut(buttonRetry, false, duration, interp, root);
+            main.animateButtonOut(buttonNext, true, duration, interp, root);
+            startNewGame(thisLevel + 1);
+        });
     }
 
     private Text makeGameOverButton(String s) {
@@ -182,28 +192,35 @@ public class GameMechanics {
             main.animateButtonOut(buttonRetry, true, duration, interp, root);
             main.animateButtonOut(buttonRetry, false, duration, interp, root);
             main.animateButtonOut(buttonNext, false, duration, interp, root);
-
-            GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd, levelLoader, thisLevel);
-            Rectangle r = new Rectangle();
-            r.setFill(gameBgColor);
-            r.setWidth(WINDOW_WIDTH);
-            r.setHeight(WINDOW_HEIGHT);
-            r.setOpacity(0);
-            FadeTransition fade = new FadeTransition();
-            fade.setDuration(duration);
-            fade.setToValue(1);
-            fade.setNode(r);
-            fade.setInterpolator(interp);
-            fade.setOnFinished(f -> {
-                gameMechanics.load();
-                Scene game = gameMechanics.getGameScene();
-                window.setScene(game);
-                gameMechanics.startGame();
-            });
-            root.getChildren().add(r);
-            fade.play();
-            gameMechanics.animatePlayerIn();
+            startNewGame(thisLevel);
         });
+    }
+
+    private void startNewGame(int level) {
+        Duration duration = Duration.millis(300);
+        Interpolator interp = Interpolator.EASE_OUT;
+        GameMechanics gameMechanics = new GameMechanics(WINDOW_WIDTH, WINDOW_HEIGHT, window, gameBgColor, rnd, levelLoader, level);
+
+        Rectangle r = new Rectangle();
+        r.setFill(gameBgColor);
+        r.setWidth(WINDOW_WIDTH);
+        r.setHeight(WINDOW_HEIGHT);
+        r.setOpacity(0);
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(duration);
+        fade.setToValue(1);
+        fade.setNode(r);
+        fade.setInterpolator(interp);
+        fade.setOnFinished(f -> {
+            gameMechanics.load();
+            Scene game = gameMechanics.getGameScene();
+            window.setScene(game);
+            gameMechanics.startGame();
+            timeline.stop();
+        });
+        root.getChildren().add(r);
+        fade.play();
+        gameMechanics.animatePlayerIn();
     }
 
     /**
@@ -492,14 +509,8 @@ public class GameMechanics {
 
     private void handleGameOverIfPlayerDead() {
         if (player.dead) {
-            gc.setFont(Font.font("Sitka Small", 40));
-            gc.setFill(gameOverColor);
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("Game Over", WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
-            gc.setFont(Font.font("Sitka Small", 24));
-            gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
-
             if (!gameOverDisplayed) {
+                showGameOverBG(2, false);
                 buttonRetry.setY(WINDOW_HEIGHT/3 + 120);
                 buttonQuit.setY(WINDOW_HEIGHT/3 + 160);
                 root.getChildren().addAll(buttonRetry, buttonQuit);
@@ -509,24 +520,68 @@ public class GameMechanics {
     }
 
     private void handleGameWonIfAllEnemiesDead() {
-        // TODO: Make it so that the text "Click here" leads to a new level.
         if (allEnemiesLoadedAndAllAreDead() && !player.exploding) {
-            gc.setFont(Font.font("Sitka Small", 40));
-            gc.setFill(gameOverColor);
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText("Level Completed",
-                    WINDOW_WIDTH/2, WINDOW_HEIGHT/3);
-            gc.setFont(Font.font("Sitka Small", 24));
-            gc.fillText("Score: " + player.getScore(), WINDOW_WIDTH/2, WINDOW_HEIGHT/3 + 40);
-
             if (!gameOverDisplayed) {
-                buttonNext.setY(WINDOW_HEIGHT/3 + 120);
-                buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
-                buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
-                root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
+                if (thisLevel < levelLoader.getAmountOfLevels()) {
+                    showGameOverBG(3, true);
+                    buttonNext.setY(WINDOW_HEIGHT/3 + 120);
+                    buttonRetry.setY(WINDOW_HEIGHT/3 + 160);
+                    buttonQuit.setY(WINDOW_HEIGHT/3 + 200);
+                    root.getChildren().addAll(buttonNext, buttonRetry, buttonQuit);
+                } else {
+                    showGameOverBG(2, true);
+                    buttonRetry.setY(WINDOW_HEIGHT/3 + 120);
+                    buttonQuit.setY(WINDOW_HEIGHT/3 + 160);
+                    root.getChildren().addAll(buttonRetry, buttonQuit);
+                }
                 gameOverDisplayed = true;
             }
         }
+    }
+
+    private void showGameOverBG(int amtButtons, boolean win) {
+        int margin = 50;
+        int startY = 270 - margin;
+        int w = 400;
+        int startX = WINDOW_WIDTH/2 - w/2;
+        int targetEnd = 380 + amtButtons*40;
+        int h = targetEnd - startY + margin;
+
+        Rectangle outline = new Rectangle();
+        outline.setStroke(gameOverColor);
+        outline.setStrokeWidth(3);
+        outline.setWidth(w);
+        outline.setHeight(h);
+        outline.setX(startX);
+        outline.setY(startY);
+        outline.setFill(null);
+
+        Rectangle inner = new Rectangle();
+        inner.setFill(gameBgColor);
+        inner.setOpacity(0.9);
+        inner.setWidth(w);
+        inner.setHeight(h);
+        inner.setX(startX);
+        inner.setY(startY);
+
+        Text gameOver = new Text();
+        gameOver.setText(win ? "Level Completed" : "Game Over");
+        gameOver.setFont(Font.font("Sitka Small", 40));
+        gameOver.setFill(gameOverColor);
+        gameOver.setX(WINDOW_WIDTH / 2 - gameOver.getLayoutBounds().getWidth() / 2);
+        gameOver.setY(WINDOW_HEIGHT/3);
+
+        Text score = new Text();
+        score.setText("Score: " + player.getScore());
+        score.setFont(Font.font("Sitka Small", 24));
+        score.setFill(gameOverColor);
+        score.setX(WINDOW_WIDTH / 2 - score.getLayoutBounds().getWidth() / 2);
+        score.setY(WINDOW_HEIGHT/3 + 40);
+
+        root.getChildren().add(outline);
+        root.getChildren().add(inner);
+        root.getChildren().add(gameOver);
+        root.getChildren().add(score);
     }
 
     private boolean allEnemiesLoadedAndAllAreDead() {
