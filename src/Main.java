@@ -261,10 +261,6 @@ public class Main extends Application {
                     if (node.getId() != null && node.getId().equals("MainMenu")) continue;      // Don't apply to main menu title
                     double scaleByValue = -24/node.getLayoutBounds().getWidth();
 
-//                    outRect.setId("OuterRectangle");
-//                    inRect.setId("InnerRectangle");
-//                    marker.setId("MarkerRectangle");
-
                     if (node.getId() == null || !node.getId().equals("InnerRectangle")) transitionFade(node, Duration.millis(durationMillis), Interpolator.EASE_OUT, root);
                     transitionScale(node, Duration.millis(durationMillis), Interpolator.EASE_OUT, scaleByValue);
                 }
