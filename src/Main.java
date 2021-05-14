@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -50,7 +49,7 @@ public class Main extends Application {
         root = new Pane();
         mainScene = new Scene(root);
 
-        mainMenu();
+        mainMenu(true);
 
         window.setScene(mainScene);
         window.show();
@@ -70,21 +69,23 @@ public class Main extends Application {
         root = new Pane();
         mainScene = new Scene(root);
 
-        mainMenu();
+        mainMenu(true);
     }
 
     /**
      * Load the Main Menu.
+     * @param fullStart If true, animates the main menu title too.
      */
-    public void mainMenu() {
+    public void mainMenu(boolean fullStart) {
         Rectangle bg = getBackground();
 
-        Text menuText = makeMenuTextTitle("Main Menu", 100, 40);
-        Text startGame = makeMenuTextTitle("Start Game", 150, 20);
-        Text inventory = makeMenuTextTitle("Inventory", 190, 20);
-        Text achievements = makeMenuTextTitle("Achievements", 230, 20);
-        Text highscore = makeMenuTextTitle("Highscore", 270, 20);
-        Text settings = makeMenuTextTitle("Settings", 310, 20);
+        Text menuText = makeMenuTextTitle("Main Menu", 100, 40, !fullStart);
+        menuText.setId("MainMenu");
+        Text startGame = makeMenuTextTitle("Start Game", 150, 20, false);
+        Text inventory = makeMenuTextTitle("Inventory", 190, 20, false);
+        Text achievements = makeMenuTextTitle("Achievements", 230, 20, false);
+        Text highscore = makeMenuTextTitle("Highscore", 270, 20, false);
+        Text settings = makeMenuTextTitle("Settings", 310, 20, false);
 
         ArrayList<Text> textArr = new ArrayList<>(
                 Arrays.asList(
@@ -95,10 +96,10 @@ public class Main extends Application {
                         settings
                 )
         );
-        showButtons(menuText, textArr);
+        showButtons(menuText, fullStart, textArr);
         highlightButtons(textArr);
 
-        // Configure animations
+        // Configure button interactions
         Duration animationDuration = Duration.millis(300);
         Interpolator interp = Interpolator.EASE_OUT;
 
@@ -115,11 +116,12 @@ public class Main extends Application {
         }
     }
 
-    private void showButtons(Text menuText, ArrayList<Text> textArr) {
+    private void showButtons(Text menuText, boolean includeMain, ArrayList<Text> textArr) {
         Duration duration = Duration.millis(500);
         Interpolator interp = Interpolator.EASE_OUT;
 
-        PauseTransition last = staggeredButtonAnimation(menuText, duration, interp, null);
+        PauseTransition last = includeMain ? staggeredButtonAnimation(menuText, duration, interp, null) : null;
+
         for (Text label : textArr) {
             last = staggeredButtonAnimation(label, duration, interp, last);
         }
@@ -170,16 +172,17 @@ public class Main extends Application {
      * Configure a Text object.
      * @param s The title for the Text object.
      * @param posY The y-position for the Text object.
+     * @param show If true, shows the title by giving it 1 as opacity.
      * @return The Text object.
      */
-    public Text makeMenuTextTitle(String s, int posY, int fontSize) {
+    public Text makeMenuTextTitle(String s, int posY, int fontSize, boolean show) {
         Text label = new Text();
         label.setText(s);
         label.setFill(Color.BLACK);
         label.setFont(Font.font("Sitka Small", fontSize));
         label.setX(WINDOW_WIDTH / 2 - label.getLayoutBounds().getWidth() / 2);
         label.setY(posY);
-        label.setOpacity(0);
+        label.setOpacity(show ? 1 : 0);
         return label;
     }
 
@@ -213,67 +216,81 @@ public class Main extends Application {
             bgFade.setOpacity(0);
 
             // Introduce level selection
+            int levelsPerRow = 3;
+            int levelsPerCol = 5;
+            double w = 80;
+            double h = 80;
+            int margin = 16;
+            int border = 2;
+            double totalW = w*levelsPerRow + margin*(levelsPerRow-1);
+            double startX = WINDOW_WIDTH/2 - totalW/2;
+            int startY = 174;
+            int millis = 150;
+            double scaleIn = (w+margin)/w;
+
+            double boxHeight = 30;
+            double xPos = startX;
+            // Make "Back" button at the bottom
+            double yPos = startY + levelsPerCol*margin + levelsPerCol*w;
+            Rectangle backButton = makeBackHeader(xPos, yPos, totalW, boxHeight, border, "Return", millis, (totalW+2*margin)/totalW);
+            // Make "Select Level" box title
+            yPos = startY - margin - boxHeight;
+            makeSelectLevelHeader(xPos, yPos, totalW, boxHeight, border, "Select level");
+
             LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
+
             PauseTransition[] p = new PauseTransition[]{
                     new PauseTransition()
             };
             p[0].setDuration(Duration.millis(100));
             p[0].play();
-            int levelsPerRow = 3;
             PauseTransition pUpper = p[0];
-            for (int i = 1; i <= levelLoader.getAmountOfLevels(); i++) {
-                p = createLevelButton(i, p[0], bgFade, levelLoader, pUpper, levelsPerRow);
-                if (i % levelsPerRow == 1) pUpper = p[1];
+            for (int level = 1; level <= levelLoader.getAmountOfLevels(); level++) {
+                double x = startX + (w + margin) * ((level - 1) % levelsPerRow);
+                double y = startY + (h + margin) * ((level - 1) / levelsPerRow);
+                p = createLevelButton(level, p[0], bgFade, levelLoader, pUpper, levelsPerRow, x, y, w, h, border, millis, scaleIn);
+                if (level % levelsPerRow == 1) pUpper = p[1];
                 // Prohibit user from selecting a level before all levels have been added to root in order to circumvent bug
-                if (i == levelLoader.getAmountOfLevels()) p[0].setOnFinished(e -> this.levelsLoaded = true);
+                if (level == levelLoader.getAmountOfLevels()) p[0].setOnFinished(e -> this.levelsLoaded = true);
             }
+
+            backButton.setOnMouseClicked(e -> {
+                int durationMillis = 200;
+
+                for (Node node : root.getChildren()) {
+                    if (node.getId() != null && node.getId().equals("MainMenu")) continue;      // Don't apply to main menu title
+                    double scaleByValue = -24/node.getLayoutBounds().getWidth();
+
+//                    outRect.setId("OuterRectangle");
+//                    inRect.setId("InnerRectangle");
+//                    marker.setId("MarkerRectangle");
+
+                    if (node.getId() == null || !node.getId().equals("InnerRectangle")) transitionFade(node, Duration.millis(durationMillis), Interpolator.EASE_OUT, root);
+                    transitionScale(node, Duration.millis(durationMillis), Interpolator.EASE_OUT, scaleByValue);
+                }
+
+                PauseTransition pBack = new PauseTransition(Duration.millis(durationMillis));
+                pBack.setOnFinished(f -> mainMenu(false));
+                pBack.play();
+            });
         });
     }
 
-    private PauseTransition[] createLevelButton(int level, PauseTransition pPrev, Rectangle bgFade, LevelLoader levelLoader, PauseTransition pUpper, int levelsPerRow) {
-        double w = 80;
-        double h = 80;
-        int margin = 16;
-        int border = 2;
-        double totalW = w*levelsPerRow + margin*(levelsPerRow-1);
-        double startX = WINDOW_WIDTH/2 - totalW/2;
-        int startY = 174;
-
-        double xSteps = (w + margin) * ((level - 1) % levelsPerRow);
-        double ySteps = (h + margin) * ((level - 1) / levelsPerRow);
-
-        int millis = 150;
-        double scaleIn = (w+margin)/w;
-        double scaleOut = 1;
-
-        // I want access the pretty variables so i make the call from here
-        if (level == 1) {
-            double boxHeight = 30;
-
-            // Make "Select Level" box title
-            double xPos = startX;
-            double yPos = startY - margin - boxHeight;
-            makeSelectLevelHeader(xPos, yPos, totalW, boxHeight, border, "Select level");
-
-            // Make "Back" button at the bottom
-            int levelsPerCol = 5;
-            yPos = yPos + boxHeight + (levelsPerCol+1)*margin + levelsPerCol*w;
-            makeBackHeader(xPos, yPos, totalW, boxHeight, border, "Return", millis, (totalW+2*margin)/totalW);
-        }
-
+    private PauseTransition[] createLevelButton(int level, PauseTransition pPrev, Rectangle bgFade, LevelLoader levelLoader, PauseTransition pUpper, int levelsPerRow,
+                                                double x, double y, double w, double h, int border, int millis, double scaleIn) {
         Rectangle outRect = new Rectangle();
         outRect.setWidth(w);
         outRect.setHeight(h);
         outRect.setFill(Color.BLACK);
-        outRect.setX(startX + xSteps);
-        outRect.setY(startY + ySteps);
+        outRect.setX(x);
+        outRect.setY(y);
 
         Rectangle inRect = new Rectangle();
         inRect.setWidth(w-2*border);
         inRect.setHeight(h-2*border);
         inRect.setFill(Color.WHITE);
-        inRect.setX(startX + xSteps + border);
-        inRect.setY(startY + ySteps + border);
+        inRect.setX(x + border);
+        inRect.setY(y + border);
 
         Text label = centerTextInBox(String.valueOf(level), inRect);
 
@@ -281,10 +298,14 @@ public class Main extends Application {
         marker.setWidth(w);
         marker.setHeight(h);
         marker.setOpacity(0);
-        marker.setX(startX + xSteps);
-        marker.setY(startY + ySteps);
+        marker.setX(x);
+        marker.setY(y);
 
-        handleButtonHoverOnLevelSel(millis, scaleIn, scaleOut, outRect, inRect, label, marker);
+        outRect.setId("OuterRectangle");
+        inRect.setId("InnerRectangle");
+        marker.setId("MarkerRectangle");
+
+        handleButtonHoverOnLevelSel(millis, scaleIn, outRect, inRect, label, marker);
         marker.setOnMouseClicked(e -> {
             if (levelsLoaded) beginGame(bgFade, levelLoader, level);
         });
@@ -329,15 +350,15 @@ public class Main extends Application {
         return p2;
     }
 
-    private void handleButtonHoverOnLevelSel(int millis, double scaleIn, double scaleOut, Rectangle outRect, Rectangle inRect, Text label, Rectangle marker) {
+    private void handleButtonHoverOnLevelSel(int millis, double scaleIn, Rectangle outRect, Rectangle inRect, Text label, Rectangle marker) {
         ScaleTransition zoomIn1 = getScaleTransition(outRect, millis, scaleIn);
         ScaleTransition zoomIn2 = getScaleTransition(inRect, millis, scaleIn);
         ScaleTransition zoomIn3 = getScaleTransition(label, millis, scaleIn);
         ScaleTransition zoomIn4 = getScaleTransition(marker, millis, scaleIn);
-        ScaleTransition zoomOut1 = getScaleTransition(outRect, millis, scaleOut);
-        ScaleTransition zoomOut2 = getScaleTransition(inRect, millis, scaleOut);
-        ScaleTransition zoomOut3 = getScaleTransition(label, millis, scaleOut);
-        ScaleTransition zoomOut4 = getScaleTransition(marker, millis, scaleOut);
+        ScaleTransition zoomOut1 = getScaleTransition(outRect, millis, 1);
+        ScaleTransition zoomOut2 = getScaleTransition(inRect, millis, 1);
+        ScaleTransition zoomOut3 = getScaleTransition(label, millis, 1);
+        ScaleTransition zoomOut4 = getScaleTransition(marker, millis, 1);
 
         marker.setOnMouseEntered(e -> {
             zoomIn1.play();
@@ -380,6 +401,8 @@ public class Main extends Application {
         label1.setX(WINDOW_WIDTH / 2 - label1.getLayoutBounds().getWidth()/2);
         label1.setY(yPos + h - (int) (1.6*(h - label1.getLayoutBounds().getHeight())/2));
 
+        inner1.setId("InnerRectangle");
+
         int millis = 500;
         double scaleFrom = 0.85;
         scaleNodeIn(outer1, millis, scaleFrom);
@@ -390,7 +413,7 @@ public class Main extends Application {
         root.getChildren().addAll(outer1, inner1, label1);
     }
 
-    private void makeBackHeader(double xPos, double yPos, double w, double h, double border, String text, int millis, double scaleOnHover) {
+    private Rectangle makeBackHeader(double xPos, double yPos, double w, double h, double border, String text, int millis, double scaleOnHover) {
         Rectangle outer1 = new Rectangle();
         outer1.setFill(Color.BLACK);
         outer1.setWidth(w);
@@ -418,6 +441,8 @@ public class Main extends Application {
         marker.setX(xPos);
         marker.setY(yPos);
 
+        inner1.setId("InnerRectangle");
+
         int millis2 = 500;
         double scaleFrom = 0.85;
         scaleNodeIn(outer1, millis2, scaleFrom);
@@ -428,10 +453,9 @@ public class Main extends Application {
         fadeNodeIn(label1, millis2);
         root.getChildren().addAll(outer1, inner1, label1, marker);
 
-        handleButtonHoverOnLevelSel(millis, scaleOnHover, 1, outer1, inner1, label1, marker);
-        marker.setOnMouseClicked(e -> {
-            mainMenu();
-        });
+        handleButtonHoverOnLevelSel(millis, scaleOnHover, outer1, inner1, label1, marker);
+
+        return marker;
     }
 
     private void animateLevelIn(Rectangle outRect, Rectangle inRect, Text label, Rectangle marker) {
@@ -571,22 +595,22 @@ public class Main extends Application {
         transitionFade(button, animationDuration, interp, root);
     }
 
-    private void transitionFade(Text button, Duration animationDuration, Interpolator interp, Pane root) {
+    private void transitionFade(Node node, Duration animationDuration, Interpolator interp, Pane root) {
         FadeTransition transition2 = new FadeTransition();
         transition2.setDuration(animationDuration);
         transition2.setToValue(0);
-        transition2.setNode(button);
+        transition2.setNode(node);
         transition2.setInterpolator(interp);
-        transition2.setOnFinished(e -> root.getChildren().remove(button));
+        transition2.setOnFinished(e -> root.getChildren().remove(node));
         transition2.play();
     }
 
-    private void transitionScale(Text button, Duration animationDuration, Interpolator interp, double value) {
+    private void transitionScale(Node node, Duration animationDuration, Interpolator interp, double value) {
         ScaleTransition transition1 = new ScaleTransition();
         transition1.setDuration(animationDuration);
         transition1.setByX(value);
         transition1.setByY(value);
-        transition1.setNode(button);
+        transition1.setNode(node);
         transition1.setInterpolator(interp);
         transition1.play();
     }
