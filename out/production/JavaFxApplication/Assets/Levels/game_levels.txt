@@ -19,35 +19,77 @@
 
 
 level 1
-6
-enemy 1 1 1 true false 0.003 100
-enemy 1 1 100 true false 0.003 100
-enemy 1 1 1 true false 0.003 100
-enemy 1 1 100 true false 0.003 10
-enemy 1 1 1 true false 0.003 10
-enemy 1 1 100 true false 0.003 10
+10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
 -
 
 
 level 2
-6
-enemy 2 1 1 true false 0.003 10
-enemy 2 1 100 true false 0.003 10
-enemy 2 1 1 true false 0.003 10
-enemy 2 1 100 true false 0.003 10
-enemy 2 1 1 true false 0.003 10
-enemy 2 1 100 true false 0.003 10
+20
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1 50 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
 -
 
 
 level 3
-6
-enemy 3 1 1 true false 0.003 10
-enemy 3 1 100 true false 0.003 10
-enemy 3 1 1 true false 0.003 10
-enemy 3 1 100 true false 0.003 10
-enemy 3 1 1 true false 0.003 10
-enemy 3 1 100 true false 0.003 10
+30
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 2 1 50 true false 0.003 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 1 1.5 10 true false 0.003 10
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
+enemy 3 0.5 100 true false 0.005 50
 -
 
 level 4
