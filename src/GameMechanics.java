@@ -476,7 +476,6 @@ public class GameMechanics {
         if (thereAreEnemiesToLoadAndPlayerIsAlive()) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
-                // TODO clever spawning? this is just a lazy fix
                 boolean flag = false;
                 for (Enemy spawnedEnemy : enemies) {
                     if (spawnedEnemy.hasCollided(currentEnemy)) {
@@ -541,17 +540,17 @@ public class GameMechanics {
 
     private void showGameOverBG(int amtButtons, boolean win) {
         int margin = 50;
-        int startY = 270 - margin;
-        int w = 400;
-        int startX = WINDOW_WIDTH/2 - w/2;
+        int startY = 200 - margin;
+        int width = 400;
+        int startX = WINDOW_WIDTH/2 - width/2;
         int targetEnd = 380 + amtButtons*40;
-        int h = targetEnd - startY + margin;
+        int height = targetEnd - startY + margin;
 
         Rectangle outline = new Rectangle();
         outline.setStroke(gameOverColor);
         outline.setStrokeWidth(3);
-        outline.setWidth(w);
-        outline.setHeight(h);
+        outline.setWidth(width);
+        outline.setHeight(height);
         outline.setX(startX);
         outline.setY(startY);
         outline.setFill(null);
@@ -559,8 +558,8 @@ public class GameMechanics {
         Rectangle inner = new Rectangle();
         inner.setFill(gameBgColor);
         inner.setOpacity(0.9);
-        inner.setWidth(w);
-        inner.setHeight(h);
+        inner.setWidth(width);
+        inner.setHeight(height);
         inner.setX(startX);
         inner.setY(startY);
 
