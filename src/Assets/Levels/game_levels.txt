@@ -194,6 +194,66 @@ enemy 3 1 200 true false 0.005 50
 
 level 6
 60
+enemy 3 1 200 true false 0.005 50
+enemy 2 1.5 100 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 2 1.5 100 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 2 1.5 100 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 2 1.5 100 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 3 1 200 true false 0.005 50
+enemy 2 1.5 100 true false 0.005 50
+enemy 1 2 10 true false 0.005 10
+enemy 2 1.5 100 true false 0.005 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
+enemy 3 2.5 200 true false 0.01 50
 -
 
 
