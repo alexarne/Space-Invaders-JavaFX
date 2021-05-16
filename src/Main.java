@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class Main extends Application {
 
-    static final int WINDOW_HEIGHT = 900;
+    static final int WINDOW_HEIGHT = 700;
     static final int WINDOW_WIDTH = 600;
     Stage window;
     Scene mainScene, gameScene;
