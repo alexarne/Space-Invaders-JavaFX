@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -18,7 +19,7 @@ import java.util.Random;
 
 public class Main extends Application {
 
-    static final int WINDOW_HEIGHT = 700;
+    static final int WINDOW_HEIGHT = (int) Screen.getPrimary().getBounds().getHeight() - 180;
     static final int WINDOW_WIDTH = 600;
     Stage window;
     Scene mainScene, gameScene;

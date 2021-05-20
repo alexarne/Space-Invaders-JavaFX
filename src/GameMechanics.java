@@ -545,12 +545,41 @@ public class GameMechanics {
     }
 
     private void showGameOverBG(int amtButtons, boolean win) {
+        Text gameOver = new Text();
+        gameOver.setText(win ? "Level Completed" : "Game Over");
+        gameOver.setFont(Font.font("Sitka Small", 40));
+        gameOver.setFill(gameOverColor);
+        gameOver.setX(WINDOW_WIDTH / 2 - gameOver.getLayoutBounds().getWidth() / 2);
+        gameOver.setY(WINDOW_HEIGHT/3);
+
+        Text score = new Text();
+        score.setText("Score: " + player.getScore());
+        score.setFont(Font.font("Sitka Small", 24));
+        score.setFill(gameOverColor);
+        score.setX(WINDOW_WIDTH / 2 - score.getLayoutBounds().getWidth() / 2);
+        score.setY(WINDOW_HEIGHT/3 + 40);
+
+//        int margin = 50;
+//        int startY = 200 - margin;
+//        int width = 400;
+//        int startX = WINDOW_WIDTH/2 - width/2;
+//        int targetEnd = 380 + amtButtons*40;
+//        int height = targetEnd - startY + margin;
+
+//        int margin = 50;
+////        int startY = 200 - margin;
+//        int width = 400;
+//        int targetEnd = 380 + amtButtons*40;
+//        int height = targetEnd - 200;
+//        int startX = WINDOW_WIDTH/2 - width/2;
+//        int startY = WINDOW_HEIGHT/3 - height/2;
+
         int margin = 50;
-        int startY = 200 - margin;
         int width = 400;
         int startX = WINDOW_WIDTH/2 - width/2;
-        int targetEnd = 380 + amtButtons*40;
-        int height = targetEnd - startY + margin;
+        int startY = WINDOW_HEIGHT/3 - (int) gameOver.getLayoutBounds().getHeight() + 14 - margin;
+        int targetEnd = WINDOW_HEIGHT/3 + 80 + amtButtons*40 + margin;
+        int height = targetEnd - startY;
 
         Rectangle outline = new Rectangle();
         outline.setStroke(gameOverColor);
@@ -568,20 +597,6 @@ public class GameMechanics {
         inner.setHeight(height);
         inner.setX(startX);
         inner.setY(startY);
-
-        Text gameOver = new Text();
-        gameOver.setText(win ? "Level Completed" : "Game Over");
-        gameOver.setFont(Font.font("Sitka Small", 40));
-        gameOver.setFill(gameOverColor);
-        gameOver.setX(WINDOW_WIDTH / 2 - gameOver.getLayoutBounds().getWidth() / 2);
-        gameOver.setY(WINDOW_HEIGHT/3);
-
-        Text score = new Text();
-        score.setText("Score: " + player.getScore());
-        score.setFont(Font.font("Sitka Small", 24));
-        score.setFill(gameOverColor);
-        score.setX(WINDOW_WIDTH / 2 - score.getLayoutBounds().getWidth() / 2);
-        score.setY(WINDOW_HEIGHT/3 + 40);
 
         root.getChildren().add(outline);
         root.getChildren().add(inner);
