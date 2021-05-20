@@ -1,11 +1,7 @@
 # alexgu-joakimai-project
 
-### Description of the project
-We will create Space Invaders using java and JavaFX. The “minimum viable product” will be developed using various tutorials and resources on the internet. Once we have an initial version of the product, we will continue to develop it and put our own spin on it. We will generate ideas for how the game should work (game design), find suitable classes and methods, and implement these in java and JavaFX.
-
-The initial product will include core features such as the ability to move the space ship horizontally, shoot and destroy enemy spaceships, gain points when destroying enemies, weapon upgrades, and losing when colliding with an enemy. Other features we might implement include: progressing to a new level once a certain score has been reached; bosses once the player reaches a certain level; have enemies that move in different patterns; change the look of the GUI and enemies so that the player gets the feeling that he or she is fighting in different solar systems; etc..
-
-The goal is to have a playable, fun, and reasonably complex version of Space Invaders.
+### Description
+This project was developed in the course DD1349 Projektuppgift i introduktion till datalogi. It is a game that combines elements from the games Space Invaders and Space Runner. It was created using Java and JavaFX. The core features of the game are the following: The player has the ability to move the space ship horizontally, as well as shoot and destroy enemy spaceships. By destroying enemies, the player gains points, which is displayed on the screen. The enemies move vertically, and have different levels of health (amount of bullets required to destroy them), varying velocities, the ability to shoot and destroy the player, different fire rates, and the ability to be destroyed (animated as an explosion). If the player is killed before the enemies are killed, the player has the option to try the same level again or quit the game. If all the enemies are killed and the player survives, the player has the option to move on to the next level, try the same level again or quit the game. There are currently seven levels, and the levels increase in difficulty.
 
 ### How to run the application
 
