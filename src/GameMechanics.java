@@ -344,6 +344,7 @@ public class GameMechanics {
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         showPlayerScoreDuringGameplay();
+        showLevelDuringGameplay();
 
         calculateFPS();
 
@@ -386,6 +387,14 @@ public class GameMechanics {
         gc.setFont(Font.font(20));
         gc.setFill(Color.YELLOW);
         gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    private void showLevelDuringGameplay() {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        Integer level = thisLevel;
+        gc.fillText("Level: " + level.toString(), 525,  20);
     }
 
     private void calculateFPS() {
