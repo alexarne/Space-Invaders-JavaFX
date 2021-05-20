@@ -13,12 +13,19 @@ public class LevelLoader {
     int WINDOW_WIDTH, amountOfEnemies, amountOfLevels;
     Color gameBgColor;
     Random rnd;
+	File file;
 
     public LevelLoader(int WINDOW_WIDTH, Color gameBgColor, Random rnd) {
         this.filename = "src/Assets/Levels/game_levels.txt";
         this.WINDOW_WIDTH = WINDOW_WIDTH;
         this.gameBgColor = gameBgColor;
         this.rnd = rnd;
+		try {
+			file = new File(getClass().getResource("Assets/Levels/game_levels.txt").toURI());
+		} catch (Exception e) {
+			System.out.println("Error");
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -31,7 +38,7 @@ public class LevelLoader {
 
         try {
             File myObj = new File(filename);
-            Scanner myReader = new Scanner(myObj);
+            Scanner myReader = new Scanner(file);
             boolean reading = true;
             boolean foundLevel = false;
             boolean levelConfigured = false;
@@ -101,7 +108,7 @@ public class LevelLoader {
         int counter = 0;
         try {
             File myObj = new File(filename);
-            Scanner myReader = new Scanner(myObj);
+            Scanner myReader = new Scanner(file);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 if (data.startsWith("level ")) counter++;
