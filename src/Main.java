@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -18,7 +19,7 @@ import java.util.Random;
 
 public class Main extends Application {
 
-    static final int WINDOW_HEIGHT = 900;
+    static final int WINDOW_HEIGHT = (int) Screen.getPrimary().getBounds().getHeight() - 180;
     static final int WINDOW_WIDTH = 600;
     Stage window;
     Scene mainScene, gameScene;
@@ -216,8 +217,10 @@ public class Main extends Application {
             bgFade.setOpacity(0);
 
             // Introduce level selection
+            LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
+
             int levelsPerRow = 3;
-            int levelsPerCol = 5;
+            int levelsPerCol = 1 + levelLoader.getAmountOfLevels()/levelsPerRow;
             double w = 80;
             double h = 80;
             int margin = 16;
@@ -232,12 +235,10 @@ public class Main extends Application {
             double xPos = startX;
             // Make "Back" button at the bottom
             double yPos = startY + levelsPerCol*margin + levelsPerCol*w;
-            Rectangle backButton = makeBackHeader(xPos, yPos, totalW, boxHeight, border, "Return", millis, (totalW+2*margin)/totalW);
+            Rectangle backButton = makeBackHeader(xPos, yPos, totalW, boxHeight, border, "Return", millis, (totalW+margin)/totalW);
             // Make "Select Level" box title
             yPos = startY - margin - boxHeight;
             makeSelectLevelHeader(xPos, yPos, totalW, boxHeight, border, "Select level");
-
-            LevelLoader levelLoader = new LevelLoader(WINDOW_WIDTH, gameBgColor, rnd);
 
             PauseTransition[] p = new PauseTransition[]{
                     new PauseTransition()
@@ -533,8 +534,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != highscore) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -546,8 +545,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != inventory) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -559,8 +556,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != achievements) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -572,8 +567,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != settings) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 

@@ -344,6 +344,7 @@ public class GameMechanics {
         gc.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         showPlayerScoreDuringGameplay();
+        showLevelDuringGameplay();
 
         calculateFPS();
 
@@ -358,7 +359,7 @@ public class GameMechanics {
         renderShots();
 
         // Enemy shooting
-        for (Enemy enemy : enemies) { // TODO: Too much happening, hard to clean the code. Should be three methods.
+        for (Enemy enemy : enemies) {
             handleEnemyShooting(enemy);
             if (playerAndEnemyCollide(enemy)) continue;
             checkIfPlayerBulletHitsEnemy(enemy);
@@ -377,8 +378,6 @@ public class GameMechanics {
         handleGameWonIfAllEnemiesDead();
 
         renderHUD();
-
-        // TODO check if player score is worthy of an achievement
     }
 
     private void showPlayerScoreDuringGameplay() {
@@ -386,6 +385,14 @@ public class GameMechanics {
         gc.setFont(Font.font(20));
         gc.setFill(Color.YELLOW);
         gc.fillText("Score: " + player.getScore(), 10,  20);
+    }
+
+    private void showLevelDuringGameplay() {
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setFont(Font.font(20));
+        gc.setFill(Color.YELLOW);
+        Integer level = thisLevel;
+        gc.fillText("Level: " + level.toString(), 525,  20);
     }
 
     private void calculateFPS() {
@@ -416,7 +423,6 @@ public class GameMechanics {
 
     private void handlePlayerMovementAndShooting() {
         if (playerInPosition && !player.exploding) {
-            // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
             if (playerMoveRight) player.moveRight();
             if (playerShoot) {
@@ -476,7 +482,6 @@ public class GameMechanics {
         if (thereAreEnemiesToLoadAndPlayerIsAlive()) {
             if (rnd.nextDouble() < spawnProbability || enemiesLoaded == 0) {
                 Enemy currentEnemy = enemiesLoad[enemiesLoaded];
-                // TODO clever spawning? this is just a lazy fix
                 boolean flag = false;
                 for (Enemy spawnedEnemy : enemies) {
                     if (spawnedEnemy.hasCollided(currentEnemy)) {
@@ -540,30 +545,6 @@ public class GameMechanics {
     }
 
     private void showGameOverBG(int amtButtons, boolean win) {
-        int margin = 50;
-        int startY = 270 - margin;
-        int w = 400;
-        int startX = WINDOW_WIDTH/2 - w/2;
-        int targetEnd = 380 + amtButtons*40;
-        int h = targetEnd - startY + margin;
-
-        Rectangle outline = new Rectangle();
-        outline.setStroke(gameOverColor);
-        outline.setStrokeWidth(3);
-        outline.setWidth(w);
-        outline.setHeight(h);
-        outline.setX(startX);
-        outline.setY(startY);
-        outline.setFill(null);
-
-        Rectangle inner = new Rectangle();
-        inner.setFill(gameBgColor);
-        inner.setOpacity(0.9);
-        inner.setWidth(w);
-        inner.setHeight(h);
-        inner.setX(startX);
-        inner.setY(startY);
-
         Text gameOver = new Text();
         gameOver.setText(win ? "Level Completed" : "Game Over");
         gameOver.setFont(Font.font("Sitka Small", 40));
@@ -577,6 +558,45 @@ public class GameMechanics {
         score.setFill(gameOverColor);
         score.setX(WINDOW_WIDTH / 2 - score.getLayoutBounds().getWidth() / 2);
         score.setY(WINDOW_HEIGHT/3 + 40);
+
+//        int margin = 50;
+//        int startY = 200 - margin;
+//        int width = 400;
+//        int startX = WINDOW_WIDTH/2 - width/2;
+//        int targetEnd = 380 + amtButtons*40;
+//        int height = targetEnd - startY + margin;
+
+//        int margin = 50;
+////        int startY = 200 - margin;
+//        int width = 400;
+//        int targetEnd = 380 + amtButtons*40;
+//        int height = targetEnd - 200;
+//        int startX = WINDOW_WIDTH/2 - width/2;
+//        int startY = WINDOW_HEIGHT/3 - height/2;
+
+        int margin = 50;
+        int width = 400;
+        int startX = WINDOW_WIDTH/2 - width/2;
+        int startY = WINDOW_HEIGHT/3 - (int) gameOver.getLayoutBounds().getHeight() + 14 - margin;
+        int targetEnd = WINDOW_HEIGHT/3 + 80 + amtButtons*40 + margin;
+        int height = targetEnd - startY;
+
+        Rectangle outline = new Rectangle();
+        outline.setStroke(gameOverColor);
+        outline.setStrokeWidth(3);
+        outline.setWidth(width);
+        outline.setHeight(height);
+        outline.setX(startX);
+        outline.setY(startY);
+        outline.setFill(null);
+
+        Rectangle inner = new Rectangle();
+        inner.setFill(gameBgColor);
+        inner.setOpacity(0.9);
+        inner.setWidth(width);
+        inner.setHeight(height);
+        inner.setX(startX);
+        inner.setY(startY);
 
         root.getChildren().add(outline);
         root.getChildren().add(inner);
