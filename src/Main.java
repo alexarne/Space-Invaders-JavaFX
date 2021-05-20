@@ -533,8 +533,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != highscore) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -546,8 +544,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != inventory) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -559,8 +555,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != achievements) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 
@@ -572,8 +566,6 @@ public class Main extends Application {
             for (Text button : textArr) {
                 if (button != settings) animateButtonOut(button, false, animationDuration, interp, root);
             }
-
-            // TODO
         });
     }
 

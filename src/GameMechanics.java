@@ -359,7 +359,7 @@ public class GameMechanics {
         renderShots();
 
         // Enemy shooting
-        for (Enemy enemy : enemies) { // TODO: Too much happening, hard to clean the code. Should be three methods.
+        for (Enemy enemy : enemies) {
             handleEnemyShooting(enemy);
             if (playerAndEnemyCollide(enemy)) continue;
             checkIfPlayerBulletHitsEnemy(enemy);
@@ -378,8 +378,6 @@ public class GameMechanics {
         handleGameWonIfAllEnemiesDead();
 
         renderHUD();
-
-        // TODO check if player score is worthy of an achievement
     }
 
     private void showPlayerScoreDuringGameplay() {
@@ -425,7 +423,6 @@ public class GameMechanics {
 
     private void handlePlayerMovementAndShooting() {
         if (playerInPosition && !player.exploding) {
-            // TODO handle inputs
             if (playerMoveLeft) player.moveLeft();
             if (playerMoveRight) player.moveRight();
             if (playerShoot) {
