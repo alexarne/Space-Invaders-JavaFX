@@ -2,30 +2,21 @@
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Random;
-import java.util.Scanner;
 
 public class LevelLoader {
-    String filename;
+    String filepath;
     Enemy[] enemies;
-    int WINDOW_WIDTH, amountOfEnemies, amountOfLevels;
+    int WINDOW_WIDTH, amountOfEnemies;
     Color gameBgColor;
     Random rnd;
-	File file;
 
     public LevelLoader(int WINDOW_WIDTH, Color gameBgColor, Random rnd) {
-        this.filename = "src/Assets/Levels/game_levels.txt";
+        this.filepath = "Assets/Levels/game_levels.txt";
         this.WINDOW_WIDTH = WINDOW_WIDTH;
         this.gameBgColor = gameBgColor;
         this.rnd = rnd;
-		try {
-			file = new File(getClass().getResource("Assets/Levels/game_levels.txt").toURI());
-		} catch (Exception e) {
-			System.out.println("Error");
-			e.printStackTrace();
-		}
     }
 
     /**
@@ -35,21 +26,20 @@ public class LevelLoader {
      */
     public Enemy[] getEnemies(int num) {
         // Read text file and assign values accordingly //TODO
+        BufferedReader levelsReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filepath)));
 
         try {
-            File myObj = new File(filename);
-            Scanner myReader = new Scanner(file);
             boolean reading = true;
             boolean foundLevel = false;
             boolean levelConfigured = false;
             int enemiesAdded = 0;
 
-            while (myReader.hasNextLine() && reading) {
-                String data = myReader.nextLine();
+            String data;
+            while ((data = levelsReader.readLine()) != null && reading) {
                 if (!foundLevel) {
                     if (data.equalsIgnoreCase("level " + num)) {
                         foundLevel = true;
-                        amountOfEnemies = Integer.parseInt(myReader.nextLine());
+                        amountOfEnemies = Integer.parseInt(levelsReader.readLine());
                         enemies = new Enemy[amountOfEnemies];
                     }
                 } else {
@@ -84,9 +74,11 @@ public class LevelLoader {
             if (!foundLevel) System.out.println("ERROR: Level not found.");
             if (foundLevel && !levelConfigured) System.out.println("ERROR: Level found but not fully configured.");
             if (enemiesAdded < amountOfEnemies) System.out.println("ERROR: Fewer enemies than specified were loaded.");
-            myReader.close();
+            levelsReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return enemies;
@@ -105,17 +97,19 @@ public class LevelLoader {
      * @return The amount of levels.
      */
     public int getAmountOfLevels() {
+        BufferedReader levelsReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filepath)));
+
         int counter = 0;
         try {
-            File myObj = new File(filename);
-            Scanner myReader = new Scanner(file);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
+            String data;
+            while ((data = levelsReader.readLine()) != null) {
                 if (data.startsWith("level ")) counter++;
             }
-            myReader.close();
+            levelsReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return counter;
