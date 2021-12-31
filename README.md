@@ -1,6 +1,6 @@
 # alexgu-joakimai-project
 
-Project left as unfinished (only Main Menu button "Start Game" working, final level was intended to be a "boss battle" but that feature was not implemented) with passing (highest) grade in the course.
+Project left as relatively unfinished (only Main Menu button "Start Game" working, final level was intended to be a "boss battle" but that feature was not implemented) with passing (highest) grade in the course.
 
 ### Description
 
