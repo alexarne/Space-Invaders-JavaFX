@@ -33,6 +33,7 @@ The application has been developed using the JavaFX SDK (version 16, but may wor
 ### How to play
 
 Press or hold A to move to the left, D to move to the right, press SPACE to shoot, and press R to reload.
+Complete a level by surviving until all enemy ships have either been destroyed or passed by the end of the screen.
 
 ### How to *edit* the application
 
