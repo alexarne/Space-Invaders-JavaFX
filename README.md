@@ -32,7 +32,7 @@ The application has been developed using the JavaFX SDK (version 16, but may wor
 
 ### How to play
 
-Press or hold A to move to the left, D to move to the right, and SPACE to shoot.
+Press or hold A to move to the left, D to move to the right, press SPACE to shoot, and press R to reload.
 
 ### How to *edit* the application
 
