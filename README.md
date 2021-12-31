@@ -1,5 +1,7 @@
 # alexgu-joakimai-project
 
+Project left as unfinished (only Main Menu button "Start Game" working, final level was intended to be a "boss battle" but that feature was not implemented) with passing (highest) grade in the course.
+
 ### Description
 
 This project was developed in the course DD1349 Projektuppgift i introduktion till datalogi. It is a game that combines elements from the games Space Invaders and Space Runner. It was created using Java and JavaFX. The core features of the game are the following: The player has the ability to move the space ship horizontally, as well as shoot and destroy enemy spaceships. By destroying enemies, the player gains points, which is displayed on the screen. The enemies move vertically, and have different levels of health (amount of bullets required to destroy them), varying velocities, the ability to shoot and destroy the player, different fire rates, and the ability to be destroyed (animated as an explosion). If the player is killed before the enemies are killed, the player has the option to try the same level again or quit the game. If all the enemies are killed and the player survives, the player has the option to move on to the next level, try the same level again or quit the game. There are currently seven levels, and the levels increase in difficulty.
