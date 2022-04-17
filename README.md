@@ -9,14 +9,14 @@ This project was developed in the course "DD1349 Projektuppgift i introduktion t
 ### Images
 
 <p float="left">
- <img src="images/mainmenu.png" width="200">
- <img src="images/levelselect.png" width="200">
- <img src="images/ingame0.png" width="200">
- <img src="images/ingame1.png" width="200">
- <img src="images/ingame2.png" width="200">
- <img src="images/levelcompleted.png" width="200">
- <img src="images/destroyed.png" width="200">
- <img src="images/gameover.png" width="200">
+ <img src="images/mainmenu.png" width="32%">
+ <img src="images/levelselect.png" width="32%">
+ <img src="images/ingame0.png" width="32%">
+ <img src="images/ingame1.png" width="32%">
+ <img src="images/ingame2.png" width="32%">
+ <img src="images/levelcompleted.png" width="32%">
+ <img src="images/destroyed.png" width="32%">
+ <img src="images/gameover.png" width="32%">
 </p>
 
 # How-to guides:
