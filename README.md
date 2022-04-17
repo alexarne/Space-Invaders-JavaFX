@@ -4,7 +4,20 @@ Originally developed on KTH GitHub and ported over to the official GitHub but th
 
 ### Description
 
-This project was developed in the course DD1349 Projektuppgift i introduktion till datalogi. It is a game that combines elements from the games Space Invaders and Space Runner. It was created using Java and JavaFX. The core features of the game are the following: The player has the ability to move the space ship horizontally, as well as shoot and destroy enemy spaceships. By destroying enemies, the player gains points, which is displayed on the screen. The enemies move vertically, and have different levels of health (amount of bullets required to destroy them), varying velocities, the ability to shoot and destroy the player, different fire rates, and the ability to be destroyed (animated as an explosion). If the player is killed before the enemies are killed, the player has the option to try the same level again or quit the game. If all the enemies are killed and the player survives, the player has the option to move on to the next level, try the same level again or quit the game. There are currently seven levels, and the levels increase in difficulty.
+This project was developed in the course "DD1349 Projektuppgift i introduktion till datalogi". It is a game that combines elements from the games Space Invaders and Space Runner. It was created using Java and JavaFX. The core features of the game are the following: The player has the ability to move the space ship horizontally, as well as shoot and destroy enemy spaceships. By destroying enemies, the player gains points, which is displayed on the screen. The enemies move vertically, and have different levels of health (amount of bullets required to destroy them), varying velocities, the ability to shoot and destroy the player, different fire rates, and the ability to be destroyed (animated as an explosion). If the player is killed before the enemies are killed, the player has the option to try the same level again or quit the game. If all the enemies are killed and the player survives, the player has the option to move on to the next level, try the same level again or quit the game. There are currently seven levels, and the levels increase in difficulty. Additionally, the levels can be configured by editing the [game_levels.txt](/src/Assets/Levels/game_levels.txt) (see the comments in it for instructions).
+
+### Images
+
+<p float="left">
+ <img src="images/mainmenu.png" width="200">
+ <img src="images/levelselect.png" width="200">
+ <img src="images/ingame0.png" width="200">
+ <img src="images/ingame1.png" width="200">
+ <img src="images/ingame2.png" width="200">
+ <img src="images/levelcompleted.png" width="200">
+ <img src="images/destroyed.png" width="200">
+ <img src="images/gameover.png" width="200">
+</p>
 
 # How-to guides:
 
@@ -16,9 +29,9 @@ The application has been developed using the JavaFX SDK (version 16, but may wor
 
 2. Download the appropriate [JavaFX SDK](https://gluonhq.com/products/javafx/) for your operating system and unzip it to a desired location.
 
-3. Open the terminal of your choice (Command Prompt or WSL Ubuntu recommended for the specified commands) and navigate to the "src" folder you just cloned.
+3. Open the terminal of your choice (Windows' Command Prompt is recommended and the only one which has been tested for the following command) and navigate to the "src" folder you just cloned.
 
-4. Now, run the following command:
+4. Now, run the following command :
 
   `
   javac --module-path "X:\PATH\TO\lib" --add-modules javafx.controls *.java && java --module-path "X:\PATH\TO\lib" --add-modules javafx.controls Main
