@@ -1,4 +1,4 @@
-# alexgu-joakimai-project
+# Space Invaders (JavaFX)
 
 Originally developed on KTH GitHub and ported over to the official GitHub but the commit history is mostly preserved. Project is left as relatively unfinished (only Main Menu button "Start Game" working, final level was intended to be a "boss battle" but that feature was not implemented) with passing (highest) grade in the course.
 
@@ -9,14 +9,12 @@ This project was developed in the course "DD1349 Projektuppgift i introduktion t
 ### Images
 
 <p float="left">
- <img src="images/mainmenu.png" width="25%">
- <img src="images/levelselect.png" width="25%">
- <img src="images/ingame0.png" width="25%">
- <img src="images/ingame1.png" width="25%">
- <img src="images/ingame2.png" width="25%">
- <img src="images/levelcompleted.png" width="25%">
- <img src="images/destroyed.png" width="25%">
- <img src="images/gameover.png" width="25%">
+ <img src="images/mainmenu.png" width="260">
+ <img src="images/levelselect.png" width="260">
+ <img src="images/ingame2.png" width="260">
+ <img src="images/levelcompleted.png" width="260">
+ <img src="images/destroyed.png" width="260">
+ <img src="images/gameover.png" width="260">
 </p>
 
 # How-to guides:
